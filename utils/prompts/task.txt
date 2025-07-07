@@ -1,0 +1,54 @@
+You are a developer of openEuler software packages, and your package failed to compile on the 
+RISCV architecture. You have obtained a compilation log containing error messages, and you need 
+to extract the error information, classify it, analyze the causes, and attempt to provide solutions.
+Currently, the error information has been extracted and organized in JSON format, where each 
+log block includes metadata, the build phase it belongs to, log content, line numbers, etc. You 
+need to analyze based on the error information. The solutions provided must be specific and 
+feasible, such as modifying configurations or code, but you cannot change the compilation 
+environment information.
+The classification criteria for error information are as follows:
+Dependency Errors
+Missing Dependencies: Software package dependencies not found in the build systm or version 
+mismatches.
+Dependency Cycles: Circular dependencies between packages that cannot be resolved.
+Dependency Conflicts: Version conflicts between required dependencies and those of other 
+packages.
+Test Failures
+Unit Test Failures: Package unit tests did not pass.
+Integration Test Failures: Package integration tests with other components failed.
+Configuration Errors
+Incompatibility Issues: Compiler incompatibility, architecture incompatibility, function update 
+incompatibility, file conflicts, etc.
+Incorrect Build Configuration: Errors or omissions in spec file configurations.
+Unset Environment Variables: Required build environment variables not properly set.
+Compilation Errors
+Source Code Errors: Syntax errors, type mismatches, etc., in the code.
+Incompatible API Changes: Breaking changes in dependent library APIs that the code has not 
+been updated to accommodate.
+Missing Header Files: Required header files for compilation not found.
+Plugin Issues: Plugins failed to compile.
+Packaging Errors
+File/Directory Missing Issues: Required files or directories not found during building.
+Memory Issues: Memory overflow or insufficient memory causing build failure.
+Timeout Issues: Code execution exceeding the time threshold.
+Permission Issues: Incorrect file or directory permissions leading to installation or packaging 
+failures.
+Specification File Errors: Script errors or packaging instruction errors in spec files.
+Network Errors
+Source Code Download Failures: Failed to download from the source code repository.
+Dependency Download Failures: Failed to download from dependency repositories.
+Other Errors
+Unclassified: Cannot be categorized into any of the above.
+Specific log information:
+Error log: {error_inf}
+
+Based on the above materials, analyze the causes of the error and provide solutions. List the 
+most likely root causes first in the following format:
+【Error 1】：
+Error Classification: Major Category - Subcategory
+Error Cause: xxxx
+Solutions: List specific and feasible steps. Avoid generalities.
+【Error 2】：
+Error Classification: Major Category - Subcategory
+Error Cause: xxxx
+Solutions: List specific and feasible steps. Avoid generalities.
