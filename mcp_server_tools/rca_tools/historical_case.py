@@ -104,11 +104,11 @@ class HistoricalCaseRetriever:
         return results[:top_k]
 
 # 使用示例
-def demo_historical_case_retriever(query_log):
+def historical_case_retriever(query_log):
     retriever = HistoricalCaseRetriever()
     
     # 从CSV加载案例
-    retriever.load_from_csv('D:/PythonCodes/aiops_mcp/knowledge_base/github_issues_res.csv')
+    retriever.load_from_csv('/Users/zcy/Codes/PythonCodes/aiops_mcp/knowledge_base/github_issues_res.csv')
 
     # 构建索引
     retriever.build_index()

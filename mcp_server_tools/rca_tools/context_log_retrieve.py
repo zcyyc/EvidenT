@@ -25,10 +25,8 @@ class LogBlockRetriever:
         return all_contexts
 
 # 使用示例
-def demo_log_block_retriever(target_id: str):
+def log_block_retriever(log_content, target_id: str):
     # 使用用户提供的日志内容
-    log_content = json.load(open(f'D:/PythonCodes/aiops_mcp/Build_error_logs_data-master/aalto-xml.json', 'r', encoding='utf-8'))
-
     retriever = LogBlockRetriever()
     context = retriever.retrieve_context(log_content, target_id)
     print("检索到的上下文日志:")

@@ -1,7 +1,6 @@
 import re
 import os
-import json
-from typing import List, Dict, Set
+from typing import Dict, Set
 
 class SpecDependencyExtractor:
     def __init__(self):
@@ -95,36 +94,22 @@ class SpecDependencyExtractor:
         output += " - Maven工具依赖自动映射为javapackages-tools"
         
         return output
-    
-    def save_result_to_json(self, result: Dict[str, Set[str]], output_path: str) -> None:
-        """将结果保存为JSON文件"""
-        # 转换集合为列表，使其可JSON序列化
-        serializable_result = {
-            key: list(value) if isinstance(value, set) else value
-            for key, value in result.items()
-        }
-        
-        # 保存到JSON文件
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(serializable_result, f, ensure_ascii=False, indent=2)
-        
-        print(f"结果已保存至: {output_path}")
 
 
-# 使用示例
-def demo_spec_file_parser(log_text: str):
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    log_path = f"{base_dir}/Build_error_logs_data-master/log/{log_text}.txt"  # 替换为实际日志路径
-    output_json_path = f"{log_text}_spec_result.json"  # 输出JSON文件路径
-
+def spec_file_parser_from_logtext(log_path: str):
     extractor = SpecDependencyExtractor()
     
     try:
         result = extractor.extract_from_log(log_path)
         print(extractor.format_result(result))
         
-        # 保存结果为JSON文件
-        extractor.save_result_to_json(result, output_json_path)
+        serializable_result = {
+            key: list(value) if isinstance(value, set) else value
+            for key, value in result.items()
+        }
+        
+        return serializable_result
         
     except Exception as e:
         print(f"依赖提取失败: {str(e)}")
+        return str(e)

@@ -2,6 +2,8 @@ import os
 import json
 from openai import OpenAI
 from tqdm import tqdm
+from dotenv import load_dotenv
+load_dotenv(".env")
 
 def build_lad_prompt(log_lines: list[str], templates: list[str]) -> str:
     """Build prompt for anomaly detection, emphasizing careful line-by-line error analysis with keyword cues."""
@@ -44,22 +46,18 @@ def detect_anomaly_with_llm(log_lines: list[str], templates: list[str]) -> bool:
     prompt = build_lad_prompt(log_lines, templates)
 
     try:
-        user_token = "sk-d034f0182d804ebb98fcce4bbd848ab0"
         client = OpenAI(
             # defaults to os.environ.get("OPENAI_API_KEY")
-            api_key=user_token,
+            api_key=os.getenv("DASHSCOPE_API_KEY"),
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
         )
         response = (
             client.chat.completions.create(
-                model="qwen-plus",
+                model="qwen-flash",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt},
-                ],
-                max_tokens=20,  # 限制输出长度
-                temperature=0.3,  # 平衡创造性和准确性
-                top_p=0.9,  # 核采样提高相关性
+                ]
             )
             .choices[0]
             .message.content
@@ -92,16 +90,8 @@ def process_file(filename: str, input_path, output_path):
     input_path = os.path.join(input_path, filename)
     output_path = os.path.join(output_path, filename)
 
-    if not os.path.exists(input_path):
-        print(f"File not found: {input_path}")
-        return
-
     with open(input_path, "r") as f:
-        try:
-            structured_blocks = json.load(f)
-        except json.JSONDecodeError as e:
-            print(f"JSON decode error in {filename}: {e}")
-            return
+        structured_blocks = json.load(f)
 
     updated_blocks = []
 
@@ -115,13 +105,12 @@ def process_file(filename: str, input_path, output_path):
         # 使用LLM检测异常
         is_anomalous = detect_anomaly_with_llm(log_lines, templates)
 
-        # 构造输出结构
-        updated_block = {
-            "meta_info": block.get("meta_info", {}),
-            "parsed_entries": parsed_entries,
-            "anomalous": is_anomalous,
-        }
-        updated_blocks.append(updated_block)
+        if is_anomalous:
+            # 构造输出结构
+            updated_block = {
+                "anomalous_parts": ["\n"+entry["log_content"]+"\n" for entry in parsed_entries],
+            }
+            updated_blocks.append(updated_block)
 
     # 保存结果
     with open(output_path, "w") as f:
