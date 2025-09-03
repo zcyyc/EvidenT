@@ -44,6 +44,3 @@ def calculate_compression_rate():
     print("-" * 65)
     total_ratio = 100 * total_structured / total_raw if total_raw > 0 else 0
     print(f"{'TOTAL':30s} | {total_raw:6d} | {total_structured:10d} | {total_ratio:9.2f}%")
-
-if __name__ == "__main__":
-    calculate_compression_rate()

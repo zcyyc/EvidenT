@@ -1,16 +1,12 @@
 import ast
 import os
 from typing import List, Generator, Union
-
-import pandas as pd
-from tqdm import tqdm
 from tree_sitter import Language, Parser, Node
 import tree_sitter_cpp as tscpp
 import tree_sitter_go as tsgo
 import tree_sitter_java as tsjava
 import tree_sitter_typescript as tsts
 import tree_sitter_rust as tsrust
-import json
 import xml.etree.ElementTree as ET
 
 

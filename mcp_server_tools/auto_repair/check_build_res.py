@@ -4,21 +4,22 @@ from requests.auth import HTTPBasicAuth
 from xml.etree import ElementTree
 import time
 
+
 def download_logs_and_sources(temp_dir, base_url, user_name, password):
     log_url = f"{base_url}/_log"
     response = requests.get(
         log_url,
         auth=HTTPBasicAuth(user_name, password),
-        headers={
-            "Accept": "application/xml"  # OBS 通常返回 XML 响应
-        },
-        timeout=600
+        headers={"Accept": "application/xml"},
+        timeout=600,
     )
     response.raise_for_status()
 
     try:
         if "temp" in temp_dir:
-            with open(os.path.join(temp_dir, "obs_log_None_standard_riscv64.txt"), "wb") as f:
+            with open(
+                os.path.join(temp_dir, "obs_log_None_standard_riscv64.txt"), "wb"
+            ) as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
             return os.path.join(temp_dir, "obs_log_None_standard_riscv64.txt")
@@ -26,17 +27,16 @@ def download_logs_and_sources(temp_dir, base_url, user_name, password):
             return None
     except Exception as e:
         return None
-        
 
-def check_main(temp_dir:str, package_name: str):
-    # 配置参数（需替换为实际信息）
+
+def check_main(temp_dir: str, package_name: str):
     obs_url = "https://api.opensuse.org"
-    user_name = "lalala123"  # 你的 OBS 用户名
-    password = "zhaochenyu921"  # 你的 OBS 密码
-    project = "home:lalala123:RISCV_test1"
+    user_name = "your_obs_user_name"
+    password = "your_obs_project_password"
+    project = "your_obs_project"
     repository_name = "standard"
     architecture_name = "riscv64"
-    
+
     max_wait_seconds = 600
     check_interval = 30
     elapsed_seconds = 0
@@ -47,20 +47,17 @@ def check_main(temp_dir:str, package_name: str):
     while elapsed_seconds < max_wait_seconds:
         try:
             response = requests.get(
-                    status_url,
-                    auth=HTTPBasicAuth(user_name, password),
-                    headers={
-                        "Accept": "application/xml"  # OBS 通常返回 XML 响应
-                    },
-                    timeout=600
-                )
+                status_url,
+                auth=HTTPBasicAuth(user_name, password),
+                headers={"Accept": "application/xml"},
+                timeout=600,
+            )
             response.raise_for_status()
 
-            # 解析XML响应
             root = ElementTree.fromstring(response.text)
             print("root.attrib:\n", root.attrib)
 
-            code_value = root.attrib.get('code')
+            code_value = root.attrib.get("code")
 
             if code_value != "building":
                 if code_value == "broken":
@@ -70,18 +67,22 @@ def check_main(temp_dir:str, package_name: str):
                 elif code_value == "succeeded":
                     return "Build succeeded! The build has been successfully completed."
                 else:
-                    log_path = download_logs_and_sources(temp_dir, base_url, user_name, password)
+                    log_path = download_logs_and_sources(
+                        temp_dir, base_url, user_name, password
+                    )
                     if log_path is None:
                         return "Build failed! The failed log has been updated."
-                    return f"Build failed! The failed log has been updated to: {log_path}"
-            
+                    return (
+                        f"Build failed! The failed log has been updated to: {log_path}"
+                    )
+
             time.sleep(check_interval)
             elapsed_seconds += check_interval
-            
+
         except requests.exceptions.RequestException as e:
             print(f"Check build status failed: {str(e)}. Will retry in 10 seconds.")
             time.sleep(10)
             elapsed_seconds += 10
             continue
-        
+
     return f"Build timeout! The build has not been completed within {max_wait_seconds} seconds. Default build failed."

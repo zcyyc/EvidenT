@@ -1,19 +1,20 @@
 import pandas as pd
-import numpy as np
+import os
+import yaml
 from typing import Dict, List, Any
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 
 
 class ArchitectureKnowledgeRetriever:
-    """RISC-V架构知识语义检索工具"""
+    """RISC-V architecture knowledge semantic retrieval tool"""
 
     def __init__(self, csv_path: str = None):
-        """初始化检索器，可选择从CSV文件加载知识"""
+        """Initialize the retriever, optionally loading knowledge from a CSV file"""
         self.vectorizer = TfidfVectorizer(
-            stop_words="english",  # 过滤英文停用词
-            ngram_range=(1, 2),  # 同时考虑1-gram和2-gram
-            max_features=10000,  # 限制特征数量，提高性能
+            stop_words="english",
+            ngram_range=(1, 2),
+            max_features=10000,
         )
         self.knowledge_base = []
         self.embeddings = None
@@ -22,13 +23,13 @@ class ArchitectureKnowledgeRetriever:
         if csv_path:
             self.load_from_csv(csv_path)
 
-    def load_from_csv(
-        self, csv_path: str, id_col: str = None, content_col: str = "content"
-    ):
-        """从CSV文件加载知识条目"""
+    def load_from_csv(self, csv_path: str, id_col: str = None, content_col: str = "content"):
+        """
+        load knowledge from csv file
+        """
         df = pd.read_csv(csv_path)
 
-        # 自动检测ID列（如果未指定）
+        # auto-detect ID column if not specified
         if not id_col:
             potential_id_cols = ["id", "ID", "title", "name"]
             id_col = next((col for col in potential_id_cols if col in df.columns), None)
@@ -37,7 +38,7 @@ class ArchitectureKnowledgeRetriever:
             knowledge_id = str(row[id_col]) if id_col else f"entry_{idx}"
             content = str(row[content_col])
 
-            # 提取元数据（如果有）
+            # extract meta data
             metadata = {
                 col: row[col] for col in df.columns if col not in [id_col, content_col]
             }
@@ -45,23 +46,30 @@ class ArchitectureKnowledgeRetriever:
             self.add_knowledge(knowledge_id, content, metadata)
 
     def add_knowledge(self, knowledge_id: str, content: str, metadata: Dict = None):
-        """添加单条知识到知识库"""
+        """
+        Add a single piece of knowledge to the knowledge base
+        :param knowledge_id: knowledge id
+        :param content: knowledge content
+        :param metadata: meta data
+        """
         self.knowledge_base.append(
             {"id": knowledge_id, "content": content, "metadata": metadata or {}}
         )
 
     def build_index(self):
-        """构建向量索引"""
+        """
+        build index for knowledge base
+        """
         if not self.knowledge_base:
-            raise ValueError("知识库为空，请先添加知识或从CSV加载")
+            raise ValueError("The knowledge base is empty. Please add knowledge first or load it from CSV.")
 
-        # 提取文本内容
+        # extract content from knowledge base
         texts = [kb["content"] for kb in self.knowledge_base]
 
-        # 生成TF-IDF向量
+        # generate TF-IDF vectors
         self.embeddings = self.vectorizer.fit_transform(texts).toarray()
 
-        # 构建近邻索引（使用余弦相似度）
+        # build nearest neighbors index (using cosine similarity)
         self.index = NearestNeighbors(
             n_neighbors=min(50, len(self.knowledge_base)),
             metric="cosine",
@@ -70,19 +78,23 @@ class ArchitectureKnowledgeRetriever:
         self.index.fit(self.embeddings)
 
     def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """搜索与查询语义匹配的架构知识"""
+        """
+        search knowledge base with query
+        :param query: query
+        :param top_k: top k
+        :return: search results
+        """
         if self.index is None:
-            raise ValueError("索引未构建，请先调用build_index方法")
-
-        # 将查询转换为向量
+            raise ValueError("The index is not built. Please call build_index first.")
+        # transform query to vector
         query_vector = self.vectorizer.transform([query]).toarray()
 
-        # 搜索相似向量
+        # search similar vectors
         distances, indices = self.index.kneighbors(query_vector, n_neighbors=top_k)
         distances = distances[0]
         indices = indices[0]
 
-        # 整理结果
+        # organize results
         results = []
         for i, idx in enumerate(indices):
             kb = self.knowledge_base[idx]
@@ -91,7 +103,7 @@ class ArchitectureKnowledgeRetriever:
                     "id": kb["id"],
                     "content": kb["content"],
                     "metadata": kb["metadata"],
-                    "similarity": 1.0 - distances[i],  # 将余弦距离转换为相似度
+                    "similarity": 1.0 - distances[i],
                     "rank": i + 1,
                 }
             )
@@ -99,15 +111,20 @@ class ArchitectureKnowledgeRetriever:
         return results
 
 
-# 测试代码
 def architecture_knowledge_retriever(query: str):
-    """演示RISC-V架构知识检索器的使用"""
-    df1 = pd.read_csv(
-        "/Users/zcy/Codes/PythonCodes/aiops_mcp/knowledge_base/risc_v_knowledge_base.csv"
-    )
+    """
+    architecture knowledge retriever
+    :param query: query
+    :return: search results
+    """
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(os.path.join(base_dir, "config/paths.yaml"), "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+    csv_path = os.path.join(base_dir, config["paths"]["arch_knowledge_base"])
+
+    df1 = pd.read_csv(csv_path)
     retriever = ArchitectureKnowledgeRetriever()
 
-    # 从DataFrame添加知识（替代直接从CSV加载）
     for index, row in df1.iterrows():
         retriever.add_knowledge(
             knowledge_id=str(index),
@@ -115,12 +132,10 @@ def architecture_knowledge_retriever(query: str):
             metadata={"title": row["title"]} if "title" in row else {},
         )
 
-    # 构建索引
+    # build an index
     retriever.build_index()
-    print(f"已构建索引，知识库大小: {len(retriever.knowledge_base)} 条目")
+    print(f"Index built, knowledge base size: {len(retriever.knowledge_base)} entries")
 
-    # 执行查询并显示结果
-    print(f"\n\n===== 查询: {query} =====")
+    print(f"\n\n===== Query: {query} =====")
     results = retriever.search(query, top_k=1)
-
     return results

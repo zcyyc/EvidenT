@@ -6,12 +6,11 @@ dist/
 wheels/
 *.egg-info
 
-# Virtual environments
-.venv
-
 Build_error_logs_data-master/
 knowledge_base/risc_v_error_log/
 knowledge_base/risc_v_artitechure/
 uv.lock
 .git
 
+.venv
+.env

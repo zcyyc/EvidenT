@@ -1,4 +1,3 @@
-      
 import os
 import re
 import json
@@ -15,20 +14,27 @@ template_miner = TemplateMiner(persistence)
 
 
 def custom_preprocess(log_line: str) -> str:
+    """
+    preprocess the log line
+    Args:
+        log_line: str, the log line
+    Returns:
+        processed_line: str, the processed log line
+    """
     line = log_line.strip()
 
-    # 先将 包名-版本 + 连续5个及以上 # 连成一个整体替换成 <package>-<version><string>
+    # replace the package name-version + 5 or more consecutive # as a whole with <package>-<version><string>
     line = re.sub(
         r"([a-zA-Z0-9_.+-]+-[0-9][a-zA-Z0-9+._~]*)\s*#{5,}",
         r"<package>-<version><string>",
         line,
     )
 
-    # 纯特殊字符行替换成<string>
+    # pure special character lines are replaced with <string>
     if re.fullmatch(r"[#=\-~*<>\\\/|]{4,}", line):
         return "<string>"
 
-    # 其他替换规则
+    # other replacement rules
     line = re.sub(r"\[\d+/\d+\]", "[<progress>]", line)
     line = re.sub(r"/[-\w./]+", "<path>", line)
     line = re.sub(
@@ -36,23 +42,38 @@ def custom_preprocess(log_line: str) -> str:
     )
     line = re.sub(r"\b\d+\.\d+\.\d+\.\d+\b", "<ip>", line)
     line = re.sub(r":\d{2,5}\b", ":<port>", line)
-    # 单独包名版本替换
     line = re.sub(
         r"\b([a-zA-Z0-9_.+-]+)-([0-9][a-zA-Z0-9+._~]*)\b", r"<package>-<version>", line
     )
-    # 数字替换
     line = re.sub(r"\b\d+\b", "<num>", line)
 
     return line
 
 
 def postprocess_template(template: str) -> str:
-    # 替换模板中连续5个以上的 # 为 <string>
+    """
+    postprocess the template
+    Args:
+        template: str, the template
+    Returns:
+        processed_template: str, the processed template
+    """
+
+    # replace 5 or more consecutive # characters in the template with <string>
     template = re.sub(r"#{5,}", "<string>", template)
     return template
 
 
 def process_single_file_drain(input_file: str, structured_dir: str, template_output_dir: str):
+    """
+    process the single file with drain3
+    Args:
+        input_file: str, the input file
+        structured_dir: str, the structured dir
+        template_output_dir: str, the template output dir
+    Returns:
+        None
+    """
     os.makedirs(template_output_dir, exist_ok=True)
     input_path = os.path.join(structured_dir, input_file)
     output_path = os.path.join(template_output_dir, input_file)
@@ -91,17 +112,3 @@ def process_single_file_drain(input_file: str, structured_dir: str, template_out
 
     with open(output_path, "w") as f:
         json.dump(parsed_blocks, f, indent=2, ensure_ascii=False)
-
-
-def main():
-    files = [f for f in os.listdir(STRUCTURED_DIR) if f.endswith(".json")]
-    for file in tqdm(files, desc="Drain extracting with preprocessing"):
-        try:
-            process_single_file_drain(file)
-        except Exception as e:
-            print(f"Error processing {file}: {e}")
-    print(f"Drain3 processing done. Output saved in {TEMPLATE_OUTPUT_DIR}/")
-
-
-if __name__ == "__main__":
-    main()

@@ -9,10 +9,10 @@ def build_lad_prompt(log_lines: list[str], templates: list[str]) -> str:
     """Build prompt for anomaly detection, emphasizing careful line-by-line error analysis with keyword cues."""
     log_chunk_content = "\n".join(
         log_lines[-30:]
-    )  # Use last 30 lines for better context coverage
+    )
     template_examples = "\n".join(
         f"- {tpl}" for tpl in templates[:5]
-    )  # Up to 5 template examples
+    )
 
     return f"""
         You are an expert log analyst specializing in build and CI logs. Your task is to carefully examine the following log chunk and determine whether it should be classified as anomalous (i.e., contains errors causing build failure).
@@ -40,20 +40,18 @@ def build_lad_prompt(log_lines: list[str], templates: list[str]) -> str:
         """.strip()
 
 
-# === 使用LLM判断block是否异常 ===
 def detect_anomaly_with_llm(log_lines: list[str], templates: list[str]) -> bool:
     """使用LLM分析日志块是否包含导致构建失败的关键错误"""
     prompt = build_lad_prompt(log_lines, templates)
 
     try:
         client = OpenAI(
-            # defaults to os.environ.get("OPENAI_API_KEY")
             api_key=os.getenv("DASHSCOPE_API_KEY"),
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
         )
         response = (
             client.chat.completions.create(
-                model="qwen-flash",
+                model="qwen-plus-latest",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt},
@@ -64,7 +62,6 @@ def detect_anomaly_with_llm(log_lines: list[str], templates: list[str]) -> bool:
         )
         response = response.strip()
 
-        # 调试输出
         if os.getenv("DEBUG_LLM") == "1":
             print("=" * 80)
             print("### PROMPT:")
@@ -73,19 +70,26 @@ def detect_anomaly_with_llm(log_lines: list[str], templates: list[str]) -> bool:
             print(response)
             print("=" * 80)
 
-        # 精确匹配输出格式
+        # match output format
         if "answer: True" in response:
             return True
         return False
 
     except Exception as e:
         print(f"[LLM Error] {str(e)[:200]}...")
-        return False  # 出错时默认返回非异常
+        return False
 
 
-# === 处理单个结构化日志文件 ===
 def process_file(filename: str, input_path, output_path):
-    """处理单个JSON日志文件，添加异常检测结果"""
+    """
+    process a single JSON log file and add anomaly detection results
+    Args:
+        filename: str, the name of the file to process
+        input_path: str, the path to the input directory
+        output_path: str, the path to the output directory
+    Returns:
+        updated_blocks: list, the updated blocks with anomaly detection results
+    """
     os.makedirs(output_path, exist_ok=True)
     input_path = os.path.join(input_path, filename)
     output_path = os.path.join(output_path, filename)
@@ -98,21 +102,21 @@ def process_file(filename: str, input_path, output_path):
     for block in tqdm(structured_blocks, desc=f"Processing {filename}", leave=False):
         parsed_entries = block.get("parsed_entries", [])
 
-        # 提取日志内容和模板
+        # extract log content and templates
         log_lines = [entry["log_content"] for entry in parsed_entries]
         templates = [entry.get("log_event_template", "") for entry in parsed_entries]
 
-        # 使用LLM检测异常
+        # detect anomalies using LLM
         is_anomalous = detect_anomaly_with_llm(log_lines, templates)
 
         if is_anomalous:
-            # 构造输出结构
+            # construct the output structure
             updated_block = {
                 "anomalous_parts": ["\n"+entry["log_content"]+"\n" for entry in parsed_entries],
             }
             updated_blocks.append(updated_block)
 
-    # 保存结果
+    # save the results
     with open(output_path, "w") as f:
         json.dump(updated_blocks, f, indent=2, ensure_ascii=False)
 
