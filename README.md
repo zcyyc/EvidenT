@@ -3,6 +3,7 @@
 This is an AI-based Operations (AIOps) project focused on automated software package repair and root cause analysis. The project leverages machine learning and natural language processing techniques to analyze build failures, retrieve historical cases, and provide automated repair solutions.
 
 ## Project Structure
+```
 aiops_pro/
 ├── client.py                # Client implementation for connecting to MCP server
 ├── server.py               # Server implementation providing various tools and APIs
@@ -21,6 +22,7 @@ aiops_pro/
         ├── anomaly_detection.py  # Anomaly detection implementation
         ├── arch_know_search.py   # Architecture knowledge search
         └── historical_case.py    # Historical case retrieval
+```
 
 ## Key Features
 ### 1. Automated Repair
