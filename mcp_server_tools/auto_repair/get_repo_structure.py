@@ -485,14 +485,11 @@ def create_structure(directory_path):
     """
     structure = {}
     exclude_patterns = {
-        # 文档文件
         "AUTHORS", "CHANGELOG.md", "CONTRIBUTING.md", "README.md", "LICENSE",
-        # 文档文件目录
         "doc"
     }
 
     def build_structure(current_path: str):
-        """递归构建目录结构"""
         current_struct = {}
         try:
             with os.scandir(current_path) as entries:
@@ -501,25 +498,21 @@ def create_structure(directory_path):
                         continue
                         
                     if entry.is_dir(follow_symlinks=False):
-                        # 递归处理子目录
                         sub_struct = build_structure(entry.path)
-                        if sub_struct:  # 只保留有内容的子目录
+                        if sub_struct:
                             current_struct[entry.name] = sub_struct
                     else:
-                        # 对于文件，值为None表示无需深入内容
                         current_struct[entry.name] = None
         except PermissionError:
             pass
         return current_struct
 
-    # 从根目录开始构建结构
     root_name = os.path.basename(directory_path)
     structure[root_name] = build_structure(directory_path)
     
     return structure
 
 def get_project_structure_from_local(code_folder):
-    # 确保本地 code 文件夹存在
     assert os.path.exists(code_folder), f"{code_folder} does not exist"
 
     structure = create_structure(code_folder)
@@ -527,6 +520,5 @@ def get_project_structure_from_local(code_folder):
         "repo": os.path.basename(code_folder),
         "structure": structure,
     }
-    # with open("repo_structure.json", "w", encoding="utf-8") as f:
-    #     json.dump(d, f, ensure_ascii=False, indent=2)
     return d
+
