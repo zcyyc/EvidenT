@@ -5,7 +5,7 @@
 [    0s] 
 [    0s] i03-ch1d started "build postquantumcryptoengine.spec" at Thu Sep  4 03:02:39 UTC 2025.
 [    0s] 
-[    0s] Building failed_postquantumcryptoengine for project 'home:lalala123:RISCV_gpt_3' repository 'standard' arch 'riscv64' srcmd5 '3e758cd148dd06fa8f9c3674ed854b90'
+[    0s] Building failed_postquantumcryptoengine for project 'xxx' repository 'standard' arch 'riscv64' srcmd5 'xxx'
 [    0s] 
 [    0s] processing recipe /var/cache/obs/worker/root_25/.build-srcdir/postquantumcryptoengine.spec ...
 [    0s] running changelog2spec --target rpm --file /var/cache/obs/worker/root_25/.build-srcdir/postquantumcryptoengine.spec
@@ -78,6 +78,7 @@
 [    3s] /usr/bin/qemu-kvm -nodefaults -no-reboot -nographic -vga none -cpu host -M pc,accel=kvm,usb=off,dump-guest-core=off,vmport=off -sandbox on -bios /usr/share/qemu/qboot.rom -object rng-random,filename=/dev/random,id=rng0 -device virtio-rng-pci,rng=rng0 -object iothread,id=io0 -run-with user=qemu -net none -kernel /var/cache/obs/worker/root_25/.mount/boot/kernel -initrd /var/cache/obs/worker/root_25/.mount/boot/initrd -append root=/dev/disk/by-id/virtio-0 rootfstype=ext4 rootflags=noatime elevator=noop nmi_watchdog=0 rw ia32_emulation=1 oops=panic panic=1 quiet console=hvc0 init=/.build/initvm.x86_64 -m 16384 -drive file=/var/cache/obs/worker/root_25/root,format=raw,if=none,id=disk,cache=unsafe,aio=io_uring -device virtio-blk-pci,iothread=io0,drive=disk,serial=0 -drive file=/var/cache/obs/worker/root_25/swap,format=raw,if=none,id=swap,cache=unsafe,aio=io_uring -device virtio-blk-pci,iothread=io0,drive=swap,serial=1 -device virtio-serial,max_ports=2 -device virtconsole,chardev=virtiocon0 -chardev stdio,mux=on,id=virtiocon0 -mon chardev=virtiocon0 -chardev socket,id=monitor,server=on,wait=off,path=/var/cache/obs/worker/root_25/root.qemu/monitor -mon chardev=monitor,mode=readline -smp 4
 [    4s] [!p]104[?7h[    0.500310][    T1] systemd[1]: Failed to start Virtual Console Setup.
 [    4s] [[0;1;31mFAILED[0m] Failed to start [0;1;39mVirtual Console Setup[0m.
+
 [    6s] [6n[32766;32766H[6n[!p]104[?7h### VM INTERACTION END ###
 [    6s] 2nd stage started in virtual machine
 [    6s] ^[[24;10R^[[24;80Rmachine type: riscv64
@@ -457,7 +458,7 @@
 [  114s] -----------------------------------------------------------------
 [  114s] -----------------------------------------------------------------
 [  117s] setting SOURCE_DATE_EPOCH_MTIME to 1705308429
-[  117s] + exec rpmbuild -ba --define '_srcdefattr (-,root,root)' --nosignature --target=riscv64-suse-linux --undefine _enable_debug_packages --define 'disturl obs://build.opensuse.org/home:lalala123:RISCV_gpt_3/standard/3e758cd148dd06fa8f9c3674ed854b90-failed_postquantumcryptoengine' /home/abuild/rpmbuild/SOURCES/postquantumcryptoengine.spec
+[  117s] + exec rpmbuild -ba --define '_srcdefattr (-,root,root)' --nosignature --target=riscv64-suse-linux --undefine _enable_debug_packages --define 'disturl obs://build.opensuse.org/xxx/standard/xxx-failed_postquantumcryptoengine' /home/abuild/rpmbuild/SOURCES/postquantumcryptoengine.spec
 [  117s] Building target platforms: riscv64-suse-linux
 [  117s] Building for target riscv64-suse-linux
 [  118s] using SOURCE_DATE_EPOCH with value 1705308428 as build time
