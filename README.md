@@ -13,6 +13,9 @@ aiops_pro/
 │   └── obs_data/           # OBS data
 │       └── risc_v/         # RISC-V architecture related data
 │           └── failed_postquantumcryptoengine  # The build failed postquantumcryptoengine package
+├── knowledge_base/         # Knowledge base directory
+│   ├── history_soluction.csv  # Historical solution cases in Github
+│   └── risc_v_knowledge_base.csv  # RISC-V architecture knowledge base
 ├── temp_workspace/         # Temporary workspace for repair
 │   └── postquantumcryptoengine/  # Temporary workspace for postquantumcryptoengine package; now it is the succeed build repaired by MCPacher
 └── mcp_server_tools/       # Server tools collection
@@ -29,17 +32,17 @@ aiops_pro/
 ```
 
 ## Key Features
-### 1. Automated Repair
-- Repository Structure Analysis : Analyze project structure, identify key components and dependencies
-- Build Result Verification : Automatically check OBS build results and identify failure reasons
-- File Upload : Support for uploading repaired files to target locations
+### 1. Client-Server
+- Lightweight Client : Connects to the MCP server, processes packages sequentially for repair
+- Feature-rich Server : Provides tool APIs, supports history caching and deduplication
 ### 2. Root Cause Analysis
 - Anomaly Detection : Identify anomalous patterns in logs and build processes
 - Architecture Knowledge Search : Search relevant architectural knowledge based on TF-IDF vectorization
 - Historical Case Retrieval : Retrieve similar historical failure cases to provide reference solutions
-### 3. Client-Server Architecture
-- Lightweight Client : Connects to the MCP server, processes packages sequentially for repair
-- Feature-rich Server : Provides tool APIs, supports history caching and deduplication
+### 3. Automated Repair
+- Repository Structure Analysis : Analyze project structure, identify key components and dependencies
+- Build Result Verification : Automatically check OBS build results and identify failure reasons
+- File Upload : Support for uploading repaired files to target locations
 
 ## Usage
 ### Activate the virtual environment
