@@ -5,7 +5,7 @@
 [    0s] 
 [    0s] i04-ch4d started "build postquantumcryptoengine.spec" at Sun Aug 10 23:36:35 UTC 2025.
 [    0s] 
-[    0s] Building failed_postquantumcryptoengine for project 'home:lalala123:RISCV' repository 'standard' arch 'riscv64' srcmd5 '25d0fa950fa21a0dcff94198ad77ef26'
+[    0s] Building failed_postquantumcryptoengine for project 'xxx' repository 'standard' arch 'riscv64' srcmd5 '25d0fa950fa21a0dcff94198ad77ef26'
 [    0s] 
 [    0s] processing recipe /var/cache/obs/worker/root_14/.build-srcdir/postquantumcryptoengine.spec ...
 [    0s] running changelog2spec --target rpm --file /var/cache/obs/worker/root_14/.build-srcdir/postquantumcryptoengine.spec
@@ -82,6 +82,7 @@
 [    5s] [!p]104[?7h[    0.687401][    T1] systemd[1]: Failed to start Virtual Console Setup.
 [    5s] [[0;1;31mFAILED[0m] Failed to start [0;1;39mVirtual Console Setup[0m.
 [    7s] [[0;1;31mFAILED[0m] Failed to start [0;1;39mVirtual Console Setup[0m.
+
 [    8s] [6n[32766;32766H[6n[!p]104[?7h### VM INTERACTION END ###
 [    8s] 2nd stage started in virtual machine
 [    8s] ^[[24;10R^[[24;80Rmachine type: riscv64
@@ -462,7 +463,7 @@
 [  140s] -----------------------------------------------------------------
 [  140s] -----------------------------------------------------------------
 [  143s] setting SOURCE_DATE_EPOCH_MTIME to 1705308429
-[  143s] + exec rpmbuild -ba --define '_srcdefattr (-,root,root)' --nosignature --target=riscv64-suse-linux --undefine _enable_debug_packages --define 'disturl obs://build.opensuse.org/home:lalala123:RISCV/standard/25d0fa950fa21a0dcff94198ad77ef26-failed_postquantumcryptoengine' /home/abuild/rpmbuild/SOURCES/postquantumcryptoengine.spec
+[  143s] + exec rpmbuild -ba --define '_srcdefattr (-,root,root)' --nosignature --target=riscv64-suse-linux --undefine _enable_debug_packages --define 'disturl obs://build.opensuse.org/xxx/standard/25d0fa950fa21a0dcff94198ad77ef26-failed_postquantumcryptoengine' /home/abuild/rpmbuild/SOURCES/postquantumcryptoengine.spec
 [  144s] Building target platforms: riscv64-suse-linux
 [  144s] Building for target riscv64-suse-linux
 [  144s] using SOURCE_DATE_EPOCH with value 1705308428 as build time
