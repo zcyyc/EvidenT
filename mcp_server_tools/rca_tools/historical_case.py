@@ -2,7 +2,7 @@ import pandas as pd
 from typing import List, Dict, Any
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
+import yaml
 
 class HistoricalCaseRetriever:
     def __init__(self):
@@ -113,9 +113,12 @@ def historical_case_retriever(query_log: str):
     :return: historical cases
     """
     retriever = HistoricalCaseRetriever()
+    with open("config/paths.yaml", "r") as file:
+        config = yaml.safe_load(file)
+    history_soluction = config["paths"]["history_soluction"]
 
     # load cases from CSV
-    retriever.load_from_csv("knowledge_base/github_issues_res.csv")
+    retriever.load_from_csv(history_soluction)
 
     # build index
     retriever.build_index()

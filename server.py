@@ -12,6 +12,7 @@ from mcp_server_tools.rca_tools.historical_case import historical_case_retriever
 from mcp_server_tools.auto_repair.get_repo_structure import get_project_structure_from_local
 from mcp_server_tools.auto_repair.check_build_res import check_main
 from mcp_server_tools.auto_repair.upload_files import main_upload
+from mcp_server_tools.rca_tools.spec_directive import spec_parser_main
 import tarfile
 import zipfile
 
@@ -24,9 +25,7 @@ server_state = {
 
 
 @mcp.tool()
-def init_package_environment_tool(
-    base_dir: str, package_name: str, temp_work_dir: str, result_dir: str
-) -> str:
+def init_package_environment_tool(base_dir: str, package_name: str, temp_work_dir: str, result_dir: str) -> str:
     """
     Initializes the package's temporary working environment and copies the original files to a temporary directory.
     Args:
@@ -39,6 +38,8 @@ def init_package_environment_tool(
     """
     try:
         package_temp_dir = os.path.join(temp_work_dir, package_name)
+        if os.path.exists(package_temp_dir):
+            shutil.rmtree(package_temp_dir)
         os.makedirs(package_temp_dir, exist_ok=True)
 
         original_package_path = os.path.join(base_dir, package_name)
@@ -83,7 +84,7 @@ def track_file_modification_tool(
     package_path: str,
     old_content: str,
     new_content: str,
-) -> str:
+    ) -> str:
     """
     Tracks file modification history and records differences.
     Args:
@@ -99,7 +100,6 @@ def track_file_modification_tool(
         if package_name not in server_state["modification_history"]:
             server_state["modification_history"][package_name] = []
 
-        full_path = os.path.join(package_path, file_path)
         old_lines = old_content.splitlines(keepends=True)
         new_lines = new_content.splitlines(keepends=True)
 
@@ -280,10 +280,14 @@ def check_tool_cache(call_key: str, tool_name: str, package_name: str) -> str:
         server_state["tool_cache"][package_name] = {}
 
     if call_key in server_state["tool_cache"][package_name]:
-        return json.dumps(
-            {"hit": True, "result": server_state["tool_cache"][package_name][call_key]}
-        )
-    return json.dumps({"hit": False, "result": ""})
+        return json.dumps({
+            "hit": True,
+            "result": server_state["tool_cache"][package_name][call_key]
+        })
+    return json.dumps({
+        "hit": False,
+        "result": ""
+    })
 
 
 @mcp.tool()
@@ -301,6 +305,30 @@ def cache_tool_result(call_key: str, result: str, package_name: str) -> str:
         server_state["tool_cache"][package_name] = {}
     server_state["tool_cache"][package_name][call_key] = result
     return f"Successfully cached result for {call_key}"
+
+
+@mcp.tool()
+def reset_package_cache_tool(package_name: str) -> str:
+    """
+    Clear per-package caches for a new attempt.
+    - Clears: tool_cache and tool_call_history
+    - Keeps:  modification_history (so dynamic prompt can use it)
+    """
+    # initialize keys if missing
+    server_state.setdefault("tool_cache", {})
+    server_state.setdefault("tool_call_history", {})
+    server_state.setdefault("modification_history", {})
+ 
+    # clear cache + call history for this package
+    if package_name in server_state["tool_cache"]:
+        server_state["tool_cache"][package_name].clear()
+    if package_name in server_state["tool_call_history"]:
+        server_state["tool_call_history"][package_name].clear()
+ 
+    return json.dumps({
+        "success": True,
+        "message": f"Cleared tool_cache and tool_call_history for package '{package_name}'."
+    })
 
 
 @mcp.tool()
@@ -343,10 +371,8 @@ def spec_directive_tool(input_dir: str):
     log_text_name = input_dir.split("/")[-1] + ".spec"
     log_text_name = log_text_name.replace("failed_", "")
     path = os.path.join(input_dir, log_text_name)
-
-    with open(path, "r", encoding="utf-8") as f:
-        content = f.read()
-    return content
+    data = spec_parser_main(path)
+    return data
 
 
 @mcp.tool()
@@ -357,17 +383,6 @@ def history_case_tool(query_log) -> pd.DataFrame:
         query_log (str): Error log text to query.
     """
     return historical_case_retriever(query_log)
-
-
-@mcp.tool()
-def get_example_solution_tool():
-    """Get example solutions from history records"""
-    with open('config/paths.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-    soluction_cases = pd.read_csv(
-        config['paths']['knowledge_base']
-    )
-    return soluction_cases
 
 
 @mcp.tool()

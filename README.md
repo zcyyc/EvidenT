@@ -12,6 +12,9 @@ aiops_pro/
 ├── dataset/                # Dataset directory
 │   └── obs_data/           # OBS data
 │       └── risc_v/         # RISC-V architecture related data
+│           └── failed_postquantumcryptoengine  # The build failed postquantumcryptoengine package
+├── temp_workspace/         # Temporary workspace for repair
+│   └── postquantumcryptoengine/  # Temporary workspace for postquantumcryptoengine package; now it is the succeed build repaired by MCPacher
 └── mcp_server_tools/       # Server tools collection
     ├── auto_repair/        # Automated repair tools
     │   ├── check_build_res.py    # Check build results
@@ -21,6 +24,7 @@ aiops_pro/
         ├── ad/             # Anomaly detection
         ├── anomaly_detection.py  # Anomaly detection implementation
         ├── arch_know_search.py   # Architecture knowledge search
+        ├── spec_directive.py     # Specification directive
         └── historical_case.py    # Historical case retrieval
 ```
 

@@ -1,7 +1,7 @@
 paths:
   base_dir: "dataset/obs_data/risc_v"
-  knowledge_base: "knowledge_base/history_soluction.csv"
-  arch_knowledge_base: "knowledge_base/risc_v_knowledge_base.csv"
+  history_soluction: "knowledge_base/history_soluction.csv"
+  arch_knowledge: "knowledge_base/risc_v_knowledge_base.csv"
   structure_dir: "structured_logs_all"
   parsed_templates_dir: "parsed_templates_drain"
   anomaly_res_dir: "anomaly_detection_results"

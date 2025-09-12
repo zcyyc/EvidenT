@@ -120,7 +120,7 @@ def architecture_knowledge_retriever(query: str):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     with open(os.path.join(base_dir, "config/paths.yaml"), "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
-    csv_path = os.path.join(base_dir, config["paths"]["arch_knowledge_base"])
+    csv_path = os.path.join(base_dir, config["paths"]["arch_knowledge"])
 
     df1 = pd.read_csv(csv_path)
     retriever = ArchitectureKnowledgeRetriever()

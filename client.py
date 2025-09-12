@@ -13,6 +13,7 @@ from mcp import ClientSession, StdioServerParameters
 
 load_dotenv(".env")
 
+
 def make_args_key(tool_name: str, tool_args: dict) -> str:
     """
     Generate a stable string key:
@@ -30,7 +31,13 @@ class AutoRepairClient:
         - Calls the history/cache/anti-duplication tools maintained by the server
         - Performs several LLM -> Tools cycles and build attempts
     """
-    def __init__(self, max_retries: int = 2, max_build_attempts: int = 2, max_tool_rounds: int = 30):
+
+    def __init__(
+        self,
+        max_retries: int = 2,
+        max_build_attempts: int = 3,
+        max_tool_rounds: int = 30,
+    ):
         self.exit_stack = AsyncExitStack()
         self.session: Optional[ClientSession] = None
         self.is_session_active = False
@@ -67,10 +74,16 @@ class AutoRepairClient:
     async def connect(self, attempt: int = 1) -> bool:
         self._log("global", f"Connecting to server... (attempt {attempt})")
         try:
-            params = StdioServerParameters(command="uv", args=["run", self.server_script])
-            stdio_transport = await self.exit_stack.enter_async_context(stdio_client(params))
+            params = StdioServerParameters(
+                command="uv", args=["run", self.server_script]
+            )
+            stdio_transport = await self.exit_stack.enter_async_context(
+                stdio_client(params)
+            )
             stdio, write = stdio_transport
-            self.session = await self.exit_stack.enter_async_context(ClientSession(stdio, write))
+            self.session = await self.exit_stack.enter_async_context(
+                ClientSession(stdio, write)
+            )
             await self.session.initialize()
             self.is_session_active = True
             self._log("global", "Connected to MCP server.")
@@ -85,14 +98,17 @@ class AutoRepairClient:
     async def list_tools(self) -> List[Dict]:
         assert self.session is not None
         resp = await self.session.list_tools()
-        tools = [{
-            "type": "function",
-            "function": {
-                "name": t.name,
-                "description": t.description,
-                "input_schema": t.inputSchema
+        tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": t.name,
+                    "description": t.description,
+                    "input_schema": t.inputSchema,
+                },
             }
-        } for t in resp.tools]
+            for t in resp.tools
+        ]
         return tools
 
     # --------------- Core Process ---------------
@@ -105,8 +121,7 @@ class AutoRepairClient:
         assert self.session is not None
         # Get the pending package from the server (keep it consistent with the original tool)
         pkg_resp = await self.session.call_tool(
-            "get_packages_to_process",
-            {"base_dir": self.base_dir}
+            "get_packages_to_process", {"base_dir": self.base_dir}
         )
 
         pkg_info = json.loads(pkg_resp.content[0].text)
@@ -118,6 +133,8 @@ class AutoRepairClient:
         self._log("global", f"Found {len(packages)} packages.")
 
         tools = await self.list_tools()
+        blocked = {"init_package_environment_tool"}
+        tools = [t for t in tools if t["function"]["name"] not in blocked]
         for idx, pkg in enumerate(packages, 1):
             self._log("global", f"\n=== [{idx}/{len(packages)}] {pkg} ===")
             try:
@@ -136,8 +153,8 @@ class AutoRepairClient:
                 "base_dir": self.base_dir,
                 "package_name": package_name,
                 "temp_work_dir": self.temp_work_dir,
-                "result_dir": self.result_dir
-            }
+                "result_dir": self.result_dir,
+            },
         )
         init_data = json.loads(init_ret.content[0].text)
         if not init_data.get("success"):
@@ -155,7 +172,18 @@ class AutoRepairClient:
         build_succeeded = False
         final_text = ""
         for attempt in range(1, self.max_build_attempts + 1):
-            self._log(package_name, f"--- Build attempt {attempt}/{self.max_build_attempts} ---")
+            self._log(
+                package_name,
+                f"--- Build attempt {attempt}/{self.max_build_attempts} ---",
+            )
+            # clear per-attempt cache on server side
+            try:
+                await self.session.call_tool(
+                    "reset_package_cache_tool", {"package_name": package_name}
+                )
+                self._log(package_name, f"Cache cleared for new attempt {attempt}.")
+            except Exception as e:
+                self._log(package_name, f"Cache clear failed on attempt {attempt}: {e}")
 
             # The server concatenates historical changes + the context of the current attempt and returns messages
             upd = await self.session.call_tool(
@@ -167,24 +195,28 @@ class AutoRepairClient:
                     "formatted_prompt": system_prompt_tpl.format(
                         package_name=package_name,
                         file_name=result_file,
-                        temp_dir=package_path
-                    )
-                }
+                        temp_dir=package_path,
+                    ),
+                },
             )
             messages = json.loads(upd.content[0].text)["messages"]
 
             # 4) LLM—Tools Closed Loop (Sequential Loop)
-            content, build_ok = await self._llm_tools_loop(package_name, package_path, messages, tools)
+            content, build_ok = await self._llm_tools_loop(
+                package_name, package_path, messages, tools
+            )
             if build_ok:
                 build_succeeded = True
                 final_text = f"Build succeeded on attempt {attempt}.\n{content or ''}"
                 break
             else:
                 # In the next attempt, add a user command to guide the repair process.
-                messages.append({
-                    "role": "user",
-                    "content": f"Build failed after attempt {attempt}. Continue analyzing and repairing, then retry."
-                })
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": f"Build failed after attempt {attempt}. Continue analyzing and repairing, then retry.",
+                    }
+                )
                 final_text = f"Build failed on attempt {attempt}.\n{content or ''}"
 
         # 5) Save the result
@@ -194,9 +226,15 @@ class AutoRepairClient:
         if not build_succeeded:
             self._log(package_name, "Max attempts reached without success.")
 
-    async def _llm_tools_loop(self, package_name: str, package_path: str,
-                            messages: List[Dict], tools: List[Dict]) -> Tuple[str, bool]:
+    async def _llm_tools_loop(
+        self,
+        package_name: str,
+        package_path: str,
+        messages: List[Dict],
+        tools: List[Dict],
+    ) -> Tuple[str, bool]:
         """Process LLM tool calls sequentially; and enforce an upload+verify build fallback at the end of the round."""
+
         def _txt(x):
             # Compatible with MCP content which may be list[str|{text}]
             if isinstance(x, str):
@@ -214,9 +252,7 @@ class AutoRepairClient:
         # The model call
         try:
             resp = self.client.chat.completions.create(
-                model="gpt-5-mini",
-                messages=messages,
-                tools=tools
+                model="gpt-5-mini", messages=messages, tools=tools
             )
         except Exception as e:
             self._log(package_name, f"Model call failed: {e}")
@@ -249,18 +285,26 @@ class AutoRepairClient:
                         "tool_name": tool_name,
                         "args_key": args_key,
                         "max_repeat": 5,
-                        "package_name": package_name
-                    }
+                        "package_name": package_name,
+                    },
                 )
-                repeat_allowed = json.loads(repeat_check.content[0].text).get("allowed", True)
+                repeat_allowed = json.loads(repeat_check.content[0].text).get(
+                    "allowed", True
+                )
 
                 if not repeat_allowed:
-                    tool_ret = json.loads(repeat_check.content[0].text).get("message", "repeated call blocked")
+                    tool_ret = json.loads(repeat_check.content[0].text).get(
+                        "message", "repeated call blocked"
+                    )
                 else:
                     # Use cache mechanism to save call path
                     cache = await self.session.call_tool(
                         "check_tool_cache",
-                        {"call_key": args_key, "tool_name": tool_name, "package_name": package_name}
+                        {
+                            "call_key": args_key,
+                            "tool_name": tool_name,
+                            "package_name": package_name,
+                        },
                     )
                     cache_data = json.loads(cache.content[0].text)
                     if cache_data.get("hit"):
@@ -269,16 +313,26 @@ class AutoRepairClient:
                         try:
                             res = await asyncio.wait_for(
                                 self.session.call_tool(tool_name, tool_args),
-                                timeout=600
+                                timeout=600,
                             )
                             tool_ret = _txt(res.content)
-                            self._log(package_name, f"Tool return text: {tool_ret[:1000]}")
+                            self._log(
+                                package_name, f"Tool return text: {tool_ret[:1000]}"
+                            )
 
-                            if tool_name in ["log_anomaly_detection_tool", "get_structure_of_files", "modify_file_tool"]:
+                            if tool_name in [
+                                "log_anomaly_detection_tool",
+                                "get_structure_of_files",
+                                "modify_file_tool",
+                            ]:
                                 if "error" not in tool_ret.lower():
                                     await self.session.call_tool(
                                         "cache_tool_result",
-                                        {"call_key": args_key, "result": tool_ret, "package_name": package_name}
+                                        {
+                                            "call_key": args_key,
+                                            "result": tool_ret,
+                                            "package_name": package_name,
+                                        },
                                     )
                         except asyncio.TimeoutError:
                             tool_ret = f"Error: Tool {tool_name} timed out"
@@ -287,7 +341,7 @@ class AutoRepairClient:
 
                     await self.session.call_tool(
                         "record_tool_call_history",
-                        {"call_key": args_key, "package_name": package_name}
+                        {"call_key": args_key, "package_name": package_name},
                     )
 
                 # Mark whether the build has been uploaded/verified
@@ -297,22 +351,24 @@ class AutoRepairClient:
                     did_check = True
 
                 # Feed back the tool result
-                messages.append({
-                    "role": "assistant",
-                    "content": choice.message.content,
-                    "tool_calls": [t.model_dump() for t in choice.message.tool_calls]
-                })
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": tc.id,
-                    "content": tool_ret
-                })
+                messages.append(
+                    {
+                        "role": "assistant",
+                        "content": choice.message.content,
+                        "tool_calls": [
+                            t.model_dump() for t in choice.message.tool_calls
+                        ],
+                    }
+                )
+                messages.append(
+                    {"role": "tool", "tool_call_id": tc.id, "content": tool_ret}
+                )
 
                 # If it's a build verification, parse the result immediately
                 if tool_name == "check_build_result":
                     parsed = await self.session.call_tool(
                         "parse_build_result_tool",
-                        {"result_content": tool_ret, "package_name": package_name}
+                        {"result_content": tool_ret, "package_name": package_name},
                     )
                     if json.loads(parsed.content[0].text).get("success"):
                         return latest_text, True
@@ -320,9 +376,7 @@ class AutoRepairClient:
             # Continue to the next round of models
             try:
                 resp = self.client.chat.completions.create(
-                    model="gpt-5-mini",
-                    messages=messages,
-                    tools=tools
+                    model="gpt-5-mini", messages=messages, tools=tools
                 )
                 choice = resp.choices[0]
                 latest_text = choice.message.content or latest_text
@@ -333,11 +387,22 @@ class AutoRepairClient:
         # ---------- Fallback: If the model does not explicitly perform upload/verification build, it is enforced by the client ----------
         if not did_upload:
             try:
-                up_res = await self.session.call_tool("upload_file_to_obs_tool", {"package_path": package_path})
+                up_res = await self.session.call_tool(
+                    "upload_file_to_obs_tool", {"package_path": package_path}
+                )
                 up_txt = _txt(up_res.content)
-                self._log(package_name, f"[fallback] upload_file_to_obs_tool => {up_txt[:300]}")
+                self._log(
+                    package_name,
+                    f"[fallback] upload_file_to_obs_tool => {up_txt[:300]}",
+                )
                 # Feed the results back (for subsequent prompts/records)
-                messages.append({"role": "tool", "tool_call_id": "fallback_upload", "content": up_txt})
+                messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": "fallback_upload",
+                        "content": up_txt,
+                    }
+                )
             except Exception as e:
                 self._log(package_name, f"[fallback] upload failed: {e}")
 
@@ -345,14 +410,16 @@ class AutoRepairClient:
             try:
                 chk_res = await self.session.call_tool(
                     "check_build_result",
-                    {"input_dir": package_path, "package_name": package_name}
+                    {"input_dir": package_path, "package_name": package_name},
                 )
                 chk_txt = _txt(chk_res.content)
-                self._log(package_name, f"[fallback] check_build_result => {chk_txt[:300]}")
+                self._log(
+                    package_name, f"[fallback] check_build_result => {chk_txt[:300]}"
+                )
 
                 parsed = await self.session.call_tool(
                     "parse_build_result_tool",
-                    {"result_content": chk_txt, "package_name": package_name}
+                    {"result_content": chk_txt, "package_name": package_name},
                 )
                 if json.loads(parsed.content[0].text).get("success"):
                     return latest_text, True
