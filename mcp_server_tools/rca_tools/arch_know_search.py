@@ -1,75 +1,36 @@
 import pandas as pd
-import os
-import yaml
-from typing import Dict, List, Any
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
-
+import os
+import yaml
 
 class ArchitectureKnowledgeRetriever:
-    """RISC-V architecture knowledge semantic retrieval tool"""
+    """A simple retriever that indexes knowledge entries and supports semantic search."""
 
-    def __init__(self, csv_path: str = None):
-        """Initialize the retriever, optionally loading knowledge from a CSV file"""
+    def __init__(self, max_features: int = 20000):
+        # Initialize vectorizer and empty KB
         self.vectorizer = TfidfVectorizer(
             stop_words="english",
             ngram_range=(1, 2),
-            max_features=10000,
+            max_features=max_features,
+            min_df=1,
         )
         self.knowledge_base = []
         self.embeddings = None
         self.index = None
 
-        if csv_path:
-            self.load_from_csv(csv_path)
-
-    def load_from_csv(self, csv_path: str, id_col: str = None, content_col: str = "content"):
-        """
-        load knowledge from csv file
-        """
-        df = pd.read_csv(csv_path)
-
-        # auto-detect ID column if not specified
-        if not id_col:
-            potential_id_cols = ["id", "ID", "title", "name"]
-            id_col = next((col for col in potential_id_cols if col in df.columns), None)
-
-        for idx, row in df.iterrows():
-            knowledge_id = str(row[id_col]) if id_col else f"entry_{idx}"
-            content = str(row[content_col])
-
-            # extract meta data
-            metadata = {
-                col: row[col] for col in df.columns if col not in [id_col, content_col]
-            }
-
-            self.add_knowledge(knowledge_id, content, metadata)
-
-    def add_knowledge(self, knowledge_id: str, content: str, metadata: Dict = None):
-        """
-        Add a single piece of knowledge to the knowledge base
-        :param knowledge_id: knowledge id
-        :param content: knowledge content
-        :param metadata: meta data
-        """
+    def add_knowledge(self, knowledge_id: str, content: str, metadata: dict = None):
+        """Add a single entry to the knowledge base."""
         self.knowledge_base.append(
             {"id": knowledge_id, "content": content, "metadata": metadata or {}}
         )
 
     def build_index(self):
-        """
-        build index for knowledge base
-        """
+        """Build a TF-IDF index on the knowledge base."""
         if not self.knowledge_base:
-            raise ValueError("The knowledge base is empty. Please add knowledge first or load it from CSV.")
-
-        # extract content from knowledge base
+            raise ValueError("Knowledge base is empty.")
         texts = [kb["content"] for kb in self.knowledge_base]
-
-        # generate TF-IDF vectors
-        self.embeddings = self.vectorizer.fit_transform(texts).toarray()
-
-        # build nearest neighbors index (using cosine similarity)
+        self.embeddings = self.vectorizer.fit_transform(texts)
         self.index = NearestNeighbors(
             n_neighbors=min(50, len(self.knowledge_base)),
             metric="cosine",
@@ -77,37 +38,31 @@ class ArchitectureKnowledgeRetriever:
         )
         self.index.fit(self.embeddings)
 
-    def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """
-        search knowledge base with query
-        :param query: query
-        :param top_k: top k
-        :return: search results
-        """
+    def search(self, query: str, top_k: int = 5):
+        """Search the knowledge base for the most relevant entries."""
         if self.index is None:
-            raise ValueError("The index is not built. Please call build_index first.")
-        # transform query to vector
-        query_vector = self.vectorizer.transform([query]).toarray()
+            raise ValueError("Index not built.")
+        if not query.strip():
+            return []
 
-        # search similar vectors
-        distances, indices = self.index.kneighbors(query_vector, n_neighbors=top_k)
-        distances = distances[0]
-        indices = indices[0]
+        query_vec = self.vectorizer.transform([query])
+        distances, indices = self.index.kneighbors(query_vec, n_neighbors=top_k)
+        distances, indices = distances[0], indices[0]
 
-        # organize results
         results = []
-        for i, idx in enumerate(indices):
+        for rank, idx in enumerate(indices, start=1):
             kb = self.knowledge_base[idx]
+            sim = 1.0 - float(distances[rank - 1])  # cosine distance -> similarity
             results.append(
                 {
                     "id": kb["id"],
+                    "title": kb["metadata"].get("title", ""),
                     "content": kb["content"],
                     "metadata": kb["metadata"],
-                    "similarity": 1.0 - distances[i],
-                    "rank": i + 1,
+                    "similarity": sim,
+                    "rank": rank,
                 }
             )
-
         return results
 
 
@@ -125,17 +80,38 @@ def architecture_knowledge_retriever(query: str):
     df1 = pd.read_csv(csv_path)
     retriever = ArchitectureKnowledgeRetriever()
 
+    # Add entries from DataFrame
     for index, row in df1.iterrows():
+        metadata = {}
+        if "title" in row and pd.notna(row["title"]):
+            metadata["title"] = str(row["title"]).strip()
+        if "source" in row:
+            metadata["source"] = row["source"]
+        if "page_start" in row and "page_end" in row:
+            metadata["pages"] = f"{row['page_start']}-{row['page_end']}"
+        if "section" in row and pd.notna(row["section"]):
+            metadata["section"] = row["section"]
+
         retriever.add_knowledge(
             knowledge_id=str(index),
             content=row["content"],
-            metadata={"title": row["title"]} if "title" in row else {},
+            metadata=metadata,
         )
 
-    # build an index
+    # Build index
     retriever.build_index()
-    print(f"Index built, knowledge base size: {len(retriever.knowledge_base)} entries")
 
-    print(f"\n\n===== Query: {query} =====")
+    # Execute query
     results = retriever.search(query, top_k=1)
+
+    # Pretty print top result
+    for r in results:
+        print(f"[{r['rank']}] {r['title']} (similarity={r['similarity']:.4f})")
+        if r["metadata"].get("source"):
+            print(f"Source: {r['metadata']['source']}, Pages: {r['metadata'].get('pages','')}")
+        snippet = r["content"].strip().replace("\n", " ")
+        if len(snippet) > 400:
+            snippet = snippet[:400] + " ..."
+        print(snippet)
+
     return results
