@@ -69,6 +69,7 @@ This design ensures that every proposed repair is validated in the real OBS envi
 ### Activate the virtual environment
 ```
 uv init
+uv add venv
 source .venv/bin/activate
 uv pip install -r requirements.txt
 ```
