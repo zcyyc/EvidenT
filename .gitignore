@@ -25,7 +25,6 @@ uv.lock
 # Logs / Results / Temp outputs
 # ============================
 /auto_repair_results/
-/auto_repair_log_files/
 /temp_workspace/
 
 *.log
