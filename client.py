@@ -44,13 +44,13 @@ class AutoRepairClient:
 
         self.client = OpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
-            base_url="https://api.openai.com/v1",
+            base_url=os.getenv("OPENAI_API_BASE_URL"),
         )
 
         # Path configuration (keep consistent with the original version to facilitate smooth migration)
-        with open("config.yaml", "r") as f:
+        with open("config/paths.yaml", "r") as f:
             config = yaml.safe_load(f)
-        self.base_dir = config["base_dir"]
+        self.base_dir = config["paths"]["base_dir"]
         self.result_dir = "auto_repair_results"
         self.temp_work_dir = "temp_workspace"
         self.log_dir = "auto_repair_log_files"
@@ -274,7 +274,7 @@ class AutoRepairClient:
                 tool_args = json.loads(tc.function.arguments or "{}")
                 self._log(package_name, f"Tool call: {tool_name}({tool_args})")
 
-                if tool_name in ["log_anomaly_detection_tool", "spec_directive_tool"]:
+                if tool_name in ["log_anomaly_detection_tool", "dependency_constrain_tool"]:
                     tool_args["input_dir"] = package_path
 
                 args_key = make_args_key(tool_name, tool_args)

@@ -1,71 +1,57 @@
-# AIOps MCP Project
-## Project Overview
-This is an AI-based Operations (AIOps) project focused on automated software package repair and root cause analysis. The project leverages machine learning and natural language processing techniques to analyze build failures, retrieve historical cases, and provide automated repair solutions.
+# EvidenT: An Evidence-Preserving Framework for Iterative System-Level Package Repair
 
-## Project Structure
-```
+## 👋 Overview
+EvidenT is an automated repair framework for **system-level package builds**.
+
+<p align="center">
+  <img src="assets/framework.png" width="850">
+</p>
+
+It treats package repair as an evidence-driven and iterative workflow that coordinates:
+
+- anomaly-focused log condensation,
+- dependency and recipe-level constraint extraction,
+- historical repair case retrieval,
+- ISA-specific knowledge contextualization,
+- and build-based validation through the Open Build Service (OBS).
+
+EvidenT is implemented on top of the **Model Context Protocol (MCP)**, enabling modular tool orchestration across analysis, repair, and validation phases.
+
+
+## 🔍 Repository Structure
+
+```text
 aiops_pro/
-├── client.py                # Client implementation for connecting to MCP server
-├── server.py               # Server implementation providing various tools and APIs
-├── config/                 # Configuration files directory
-│   └── paths.yaml          # Path configurations
-├── dataset/                # Dataset directory
-│   └── obs_data/           # OBS data
-│       └── risc_v/         # RISC-V architecture related data
-│           └── failed_postquantumcryptoengine  # The build failed postquantumcryptoengine package
-├── knowledge_base/         # Knowledge base directory
-│   ├── history_soluction.csv  # Historical solution cases in Github
-│   └── risc_v_knowledge_base.csv  # RISC-V architecture knowledge base
-├── temp_workspace/         # Temporary workspace for repair
-│   └── postquantumcryptoengine/  # Temporary workspace for postquantumcryptoengine package; now it is the succeed build repaired by MCPacher
-└── mcp_server_tools/       # Server tools collection
-    ├── auto_repair/        # Automated repair tools
-    │   ├── check_build_res.py    # Check build results
-    │   ├── get_repo_structure.py # Get repository structure
-    │   └── upload_files.py       # File upload tools
-    └── rca_tools/          # Root Cause Analysis tools
-        ├── ad/             # Anomaly detection
-        ├── anomaly_detection.py  # Anomaly detection implementation
-        ├── arch_know_search.py   # Architecture knowledge search
-        ├── spec_directive.py     # Specification directive
-        └── historical_case.py    # Historical case retrieval
+├── client.py                  # Iterative repair controller (repair loop entry)
+├── server.py                  # MCP tool server exposing repair components
+│
+├── config/
+│   └── paths.yaml             # Local paths + OBS configuration
+│
+├── knowledge_base/
+│   ├── history_solution.csv        # Historical repair cases mined from GitHub
+│   └── risc_v_knowledge_base.csv   # ISA-specific Knowledge Context (RISC-V)
+│
+├── temp_workspace/            # Temporary workspaces for package repair runs
+│
+├── tools/
+│   ├── analysis_and_repair/   # Failure analysis + localization components
+│   │   ├── anomaly_detection.py      # Anomaly-focused log condensation
+│   │   ├── dependency_constrain.py   # Dependency Constraints from build recipes
+│   │   ├── historical_case.py        # Historical fix retrieval
+│   │   ├── arch_know_search.py       # ISA-specific Knowledge Context search
+│   │   └── localize_structure.py     # Workspace structure localization
+│   │
+│   └── validation/            # Build-based validation components
+│       ├── upload_files.py    # Upload repaired packages to OBS
+│       └── check_build_res.py # Query OBS build status + fetch updated logs
+│
+└── utils/prompts/
+    ├── merged_prompt_loop.txt # Dynamic prompt template used in EvidenT
+    └── prompt_bare_LLM.txt    # Baseline prompt (w/o orchestration)
 ```
 
-## Key Features
-### 1. Client-Server
-- Lightweight Client : Connects to the MCP server, processes packages sequentially for repair
-- Feature-rich Server : Provides tool APIs, supports history caching and deduplication
-### 2. Root Cause Analysis
-- Anomaly Detection : Identify anomalous patterns in logs and build processes
-- Architecture Knowledge Search : Search relevant architectural knowledge based on TF-IDF vectorization
-- Historical Case Retrieval : Retrieve similar historical failure cases to provide reference solutions
-### 3. Automated Repair
-- Repository Structure Analysis : Analyze project structure, identify key components and dependencies
-- Build Result Verification : Automatically check OBS build results and identify failure reasons
-- File Upload : Support for uploading repaired files to target locations
-### 4. Interaction with Open Build Service (OBS)
-The repair workflow is not only limited to local modification but also integrates directly with the Open Build Service (OBS) for build verification. We implemented lightweight Python programs to automate this interaction:
-
-#### 4.1 File Upload
-The script upload_files.py
- sends repaired source files back to the target OBS project/package using the OBS REST API. It constructs the endpoint
-```
-PUT https://api.opensuse.org/source/<project>/<package>/<filename>
-```
-
-with HTTP Basic authentication, and uploads the modified package files automatically.
-
-#### 4.2 Build Result Checking
-The script check_build_res.py queries OBS build status endpoints:
-```
-GET https://api.opensuse.org/build/<project>/<repository>/<arch>/<package>/_status
-```
-It parses the returned XML to detect build states such as building, succeeded, broken, or unresolvable. 
-If a build fails, it also downloads the corresponding build log from OBS for further analysis.
-
-This design ensures that every proposed repair is validated in the real OBS environment, and only those passing the full build pipeline are marked as successful.
-
-## Usage
+## 🚀 Quick Start
 ### Activate the virtual environment
 ```
 uv init
@@ -79,7 +65,7 @@ uv pip install -r requirements.txt
 python client.py
 ```
 
-## RISC-V Build Repair Results
+## 🧩 Build Repair Results
 The dataset is available at [OSF](https://osf.io/7g4ux/files/osfstorage?view_only=b18895dde06b4d5d8054df0616e5fad4), which contains the build results of 219 RISC-V packages (riscv_failed_repair.zip, riscv_succeed_repair.zip).
 
 In total, 219 packages were evaluated. Among them:

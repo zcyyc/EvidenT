@@ -1,7 +1,8 @@
-from enum import Flag
-from ntpath import isdir
 import os
 import requests
+import yaml
+from enum import Flag
+from ntpath import isdir
 from requests.auth import HTTPBasicAuth
 
 def upload_file_to_obs(
@@ -42,7 +43,6 @@ def upload_file_to_obs(
             },
             timeout=600
         )
-        
         # handling the response
         if response.status_code in (200, 201):
             return f"Success: File {target_filename} uploaded to OBS successfully."
@@ -57,10 +57,13 @@ def upload_file_to_obs(
 
 
 def main_upload(package_name, file_name):
-    OBS_API_URL = "https://api.opensuse.org"
-    OBS_USERNAME = "your_obs_user_name"
-    OBS_PASSWORD = "your_obs_password"
-    TARGET_PROJECT = "home:your_obs_project"
+    with open("config/obs_meta.yaml", "r") as file:
+        config = yaml.safe_load(file)
+    obs_url = config["obs"]["url"]
+    user_name = config["obs"]["user_name"]
+    password = config["obs"]["password"]
+    project = config["obs"]["project"]
+    print("The user_name of obs:", user_name)
 
 
     for file in os.listdir(file_name):
@@ -68,10 +71,10 @@ def main_upload(package_name, file_name):
         file_path = os.path.join(file_name, file)
         try:
             upload_file_to_obs(
-                obs_url=OBS_API_URL,
-                username=OBS_USERNAME,
-                password=OBS_PASSWORD,
-                project=TARGET_PROJECT,
+                obs_url=obs_url,
+                username=user_name,
+                password=password,
+                project=project,
                 package=package_name,
                 local_file_path=file_path,
                 target_filename=file

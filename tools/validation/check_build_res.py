@@ -3,6 +3,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from xml.etree import ElementTree
 import time
+import yaml
 
 
 def download_logs_and_sources(temp_dir, base_url, user_name, password):
@@ -30,10 +31,12 @@ def download_logs_and_sources(temp_dir, base_url, user_name, password):
 
 
 def check_main(temp_dir: str, package_name: str):
-    obs_url = "https://api.opensuse.org"
-    user_name = "your_obs_user_name"
-    password = "your_obs_project_password"
-    project = "your_obs_project"
+    with open("config/obs_meta.yaml", "r") as file:
+        config = yaml.safe_load(file)
+    obs_url = config["obs"]["url"]
+    user_name = config["obs"]["user_name"]
+    password = config["obs"]["password"]
+    project = config["obs"]["project"]
     repository_name = "standard"
     architecture_name = "riscv64"
 
@@ -52,6 +55,22 @@ def check_main(temp_dir: str, package_name: str):
                 headers={"Accept": "application/xml"},
                 timeout=600,
             )
+
+            if response.status_code == 404:
+                return f"[ERROR] Status URL not found (404): {status_url}"
+
+            if response.status_code in (401, 403):
+                return (
+                    f"[ERROR] Unauthorized (HTTP {response.status_code}). "
+                    "Check your OBS username/password."
+                )
+
+            if response.status_code >= 500:
+                return (
+                    f"[ERROR] OBS server error ({response.status_code}). "
+                    "Try again later."
+                )
+
             response.raise_for_status()
 
             root = ElementTree.fromstring(response.text)

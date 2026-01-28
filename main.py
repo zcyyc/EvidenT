@@ -1,5 +1,5 @@
 def main():
-    print("Hello from MCPacher!")
+    print("Hello from aiops-pro!")
 
 
 if __name__ == "__main__":

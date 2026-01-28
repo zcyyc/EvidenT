@@ -3,18 +3,18 @@ import json
 import shutil
 import difflib
 import time
-import yaml
-from mcp.server.fastmcp import FastMCP
-import pandas as pd
-from mcp_server_tools.rca_tools.anomaly_detection import RunAnomalyDetection
-from mcp_server_tools.rca_tools.arch_know_search import architecture_knowledge_retriever
-from mcp_server_tools.rca_tools.historical_case import historical_case_retriever
-from mcp_server_tools.auto_repair.get_repo_structure import get_project_structure_from_local
-from mcp_server_tools.auto_repair.check_build_res import check_main
-from mcp_server_tools.auto_repair.upload_files import main_upload
-from mcp_server_tools.rca_tools.spec_directive import spec_parser_main
 import tarfile
 import zipfile
+from mcp.server.fastmcp import FastMCP
+import pandas as pd
+from tools.analysis_and_repair.anomaly_detection import RunAnomalyDetection
+from tools.analysis_and_repair.arch_know_search import architecture_knowledge_retriever
+from tools.analysis_and_repair.historical_case import historical_case_retriever
+from tools.analysis_and_repair.localize_structure import get_project_structure_from_local
+from tools.analysis_and_repair.dependency_constrain import spec_parser_main
+from tools.validation.check_build_res import check_main
+from tools.validation.upload_files import main_upload
+
 
 mcp = FastMCP("auto_repair_server")
 server_state = {
@@ -362,7 +362,7 @@ def log_anomaly_detection_tool(input_dir: str):
 
 
 @mcp.tool()
-def spec_directive_tool(input_dir: str):
+def dependency_constrain_tool(input_dir: str):
     """
     Parses spec files to return build phase instructions or dependency declarations.
     Args:
@@ -376,7 +376,7 @@ def spec_directive_tool(input_dir: str):
 
 
 @mcp.tool()
-def history_case_tool(query_log) -> pd.DataFrame:
+def history_case_tool(query_log):
     """
     Retrieve historical cases with similar exceptions.
     Args:

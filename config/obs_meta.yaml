@@ -1,0 +1,5 @@
+obs:
+  url: "https://api.opensuse.org"
+  user_name: "your_obs_user_name"
+  password: "your_obs_project_password"
+  project: "your_obs_project"

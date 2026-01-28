@@ -1,6 +1,60 @@
+# ============================
 # Python-generated files
+# ============================
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
 
-
+# ============================
 # Virtual environments
+# ============================
 .env
+.venv/
+venv/
+ENV/
+
+# ============================
+# UV / Poetry lock artifacts
+# ============================
+*.lock
+uv.lock
+
+# ============================
+# Logs / Results / Temp outputs
+# ============================
+/auto_repair_results/
+/auto_repair_log_files/
+/temp_workspace/
+
+*.log
+*.out
+
+# ============================
+# IDE / Editor files
+# ============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ============================
+# OS junk files
+# ============================
+.DS_Store
+Thumbs.db
+
+# ============================
+# Jupyter / Data science
+# ============================
+.ipynb_checkpoints/
+*.pkl
+*.joblib
+
+# ============================
+# Build / Distribution artifacts
+# ============================
+build/
+dist/
+*.egg-info/
