@@ -1,0 +1,591 @@
+[    0s] Using BUILD_ROOT=/var/cache/obs/worker/root_14/.mount
+[    0s] Using BUILD_ARCH=riscv64
+[    0s] Doing kvm build in /var/cache/obs/worker/root_14/root
+[    0s] 
+[    0s] 
+[    0s] i04-ch4d started "build postquantumcryptoengine.spec" at Sun Aug 10 23:36:35 UTC 2025.
+[    0s] 
+[    0s] Building failed_postquantumcryptoengine for project 'xxx' repository 'standard' arch 'riscv64' srcmd5 'xxx'
+[    0s] 
+[    0s] processing recipe /var/cache/obs/worker/root_14/.build-srcdir/postquantumcryptoengine.spec ...
+[    0s] running changelog2spec --target rpm --file /var/cache/obs/worker/root_14/.build-srcdir/postquantumcryptoengine.spec
+[    0s] init_buildsystem --configdir /var/run/obs/worker/14/build/configs --cachedir /var/cache/build --prepare --clean --rpmlist /var/cache/obs/worker/root_14/.build.rpmlist /var/cache/obs/worker/root_14/.build-srcdir/postquantumcryptoengine.spec build ...
+[    1s] cycle: rpm-config-SUSE -> rpm
+[    1s]   breaking dependency rpm-config-SUSE -> rpm
+[    1s] [1/29] preinstalling compat-usrmerge-tools...
+[    1s] [2/29] preinstalling system-user-root...
+[    1s] [3/29] preinstalling terminfo-base...
+[    1s] [4/29] preinstalling filesystem...
+[    1s] [5/29] preinstalling glibc...
+[    1s] [6/29] preinstalling fillup...
+[    1s] [7/29] preinstalling libacl1...
+[    1s] [8/29] preinstalling libattr1...
+[    1s] [9/29] preinstalling libbz2-1...
+[    1s] [10/29] preinstalling libcap2...
+[    1s] [11/29] preinstalling libgmp10...
+[    1s] [12/29] preinstalling libgpg-error0...
+[    1s] [13/29] preinstalling libjitterentropy3...
+[    1s] [14/29] preinstalling liblua5_4-5...
+[    1s] [15/29] preinstalling liblzma5...
+[    1s] [16/29] preinstalling libpcre2-8-0...
+[    1s] [17/29] preinstalling libpopt0...
+[    1s] [18/29] preinstalling libz1...
+[    1s] [19/29] preinstalling libzstd1...
+[    2s] [20/29] preinstalling libncurses6...
+[    2s] [21/29] preinstalling libreadline8...
+[    2s] [22/29] preinstalling libselinux1...
+[    2s] [23/29] preinstalling libgcrypt20...
+[    2s] [24/29] preinstalling bash...
+[    2s] [25/29] preinstalling bash-sh...
+[    2s] [26/29] preinstalling qemu-linux-user...
+[    2s] [27/29] preinstalling coreutils...
+[    2s] [28/29] preinstalling rpm-config-SUSE...
+[    2s] [29/29] preinstalling rpm...
+[    2s] 
+[    2s] [1/18] preinstalling grep...
+[    2s] [2/18] preinstalling kernel-obs-build...
+[    2s] [3/18] preinstalling libaudit1...
+[    2s] [4/18] preinstalling libcap-ng0...
+[    2s] [5/18] preinstalling libcrypt1...
+[    2s] [6/18] preinstalling libeconf0...
+[    2s] [7/18] preinstalling libgcc_s1...
+[    2s] [8/18] preinstalling libsmartcols1...
+[    2s] [9/18] preinstalling libuuid1...
+[    2s] [10/18] preinstalling libblkid1...
+[    2s] [11/18] preinstalling perl-base...
+[    2s] [12/18] preinstalling permctl...
+[    2s] [13/18] preinstalling libmount1...
+[    2s] [14/18] preinstalling permissions-config...
+[    2s] [15/18] preinstalling libfdisk1...
+[    2s] [16/18] preinstalling permissions...
+[    2s] [17/18] preinstalling pam...
+[    2s] [18/18] preinstalling util-linux...
+[    3s] copying packages...
+[    3s] reordering...cycle: lua54 -> lua-interpreter
+[    3s]   breaking dependency lua54 -> lua-interpreter
+[    3s] cycle: binutils -> libctf0
+[    3s]   breaking dependency libctf0 -> binutils
+[    3s] cycle: openssl -> openssl-3
+[    3s]   breaking dependency openssl-3 -> openssl
+[    3s] cycle: python313-base -> libpython3_13-1_0
+[    3s]   breaking dependency python313-base -> libpython3_13-1_0
+[    3s] cycle: rpm-config-SUSE -> rpm
+[    3s]   breaking dependency rpm-config-SUSE -> rpm
+[    3s] cycle: libopenssl-devel -> libopenssl-3-devel
+[    3s]   breaking dependency libopenssl-devel -> libopenssl-3-devel
+[    3s] done
+[    3s] Detected virtio-serial support
+[    4s] booting kvm...
+[    4s] ### VM INTERACTION START ###
+[    4s] Using virtio-serial support and enabling console input
+[    4s] /usr/bin/qemu-kvm -nodefaults -no-reboot -nographic -vga none -cpu host -M pc,accel=kvm,usb=off,dump-guest-core=off,vmport=off -sandbox on -bios /usr/share/qemu/qboot.rom -object rng-random,filename=/dev/random,id=rng0 -device virtio-rng-pci,rng=rng0 -object iothread,id=io0 -run-with user=qemu -net none -kernel /var/cache/obs/worker/root_14/.mount/boot/kernel -initrd /var/cache/obs/worker/root_14/.mount/boot/initrd -append root=/dev/disk/by-id/virtio-0 rootfstype=ext4 rootflags=noatime elevator=noop nmi_watchdog=0 rw ia32_emulation=1 oops=panic panic=1 quiet console=hvc0 init=/.build/initvm.x86_64 -m 16384 -drive file=/var/cache/obs/worker/root_14/root,format=raw,if=none,id=disk,cache=unsafe,aio=io_uring -device virtio-blk-pci,iothread=io0,drive=disk,serial=0 -drive file=/var/cache/obs/worker/root_14/swap,format=raw,if=none,id=swap,cache=unsafe,aio=io_uring -device virtio-blk-pci,iothread=io0,drive=swap,serial=1 -device virtio-serial,max_ports=2 -device virtconsole,chardev=virtiocon0 -chardev stdio,mux=on,id=virtiocon0 -mon chardev=virtiocon0 -chardev socket,id=monitor,server=on,wait=off,path=/var/cache/obs/worker/root_14/root.qemu/monitor -mon chardev=monitor,mode=readline -smp 4
+[    5s] [!p]104[?7h[    0.687401][    T1] systemd[1]: Failed to start Virtual Console Setup.
+[    5s] [[0;1;31mFAILED[0m] Failed to start [0;1;39mVirtual Console Setup[0m.
+[    7s] [[0;1;31mFAILED[0m] Failed to start [0;1;39mVirtual Console Setup[0m.
+
+[    8s] [6n[32766;32766H[6n[!p]104[?7h### VM INTERACTION END ###
+[    8s] 2nd stage started in virtual machine
+[    8s] ^[[24;10R^[[24;80Rmachine type: riscv64
+[    8s] Linux version: 6.15.8-1-default #1 SMP PREEMPT_DYNAMIC Thu Jul 24 07:19:58 UTC 2025 (e03d052)
+[    8s] Time: Sun Aug 10 23:36:42 UTC 2025
+[    8s] Increasing log level from now on...
+[    8s] [    3.483652][  T573] sysrq: Changing Loglevel
+[    8s] [    3.483740][  T573] sysrq: Loglevel set to 4
+[    8s] Enable sysrq operations
+[    8s] Setting up swapspace version 1, size = 4 GiB (4294963200 bytes)
+[    8s] no label, UUID=ad8abe4c-4042-4694-be7a-b62f03efb557
+[    8s] WARNING: udev not running, creating extra device nodes
+[    9s] logging output to //.build.log...
+[    9s] processing recipe //.build-srcdir/postquantumcryptoengine.spec ...
+[    9s] init_buildsystem --configdir /.build/configs --cachedir /var/cache/build //.build-srcdir/postquantumcryptoengine.spec build ...
+[    9s] initializing rpm db...
+[   10s] querying package ids...
+[   18s] [1/164] cumulate compat-usrmerge-tools-84.87-5.5
+[   18s] [2/164] cumulate crypto-policies-20250124.4d262e7-1.1
+[   18s] [3/164] cumulate file-magic-5.46-4.1
+[   18s] [4/164] cumulate kernel-obs-build-6.15.8-1.1
+[   18s] [5/164] cumulate pkgconf-m4-2.2.0-1.1
+[   18s] [6/164] cumulate python-rpm-macros-20241120.6ae645f-1.2
+[   18s] [7/164] cumulate system-user-root-20190513-2.4
+[   18s] [8/164] cumulate terminfo-base-6.5.20250726-79.1
+[   18s] [9/164] cumulate filesystem-84.87-18.1
+[   18s] [10/164] cumulate glibc-2.41-3.1
+[   18s] [11/164] cumulate diffutils-3.12-1.1
+[   18s] [12/164] cumulate envsubst-mini-0.25.1-1.1
+[   18s] [13/164] cumulate fillup-1.42-281.1
+[   18s] [14/164] cumulate glibc-gconv-modules-extra-2.41-3.1
+[   18s] [15/164] cumulate glibc-locale-base-2.41-3.1
+[   18s] [16/164] cumulate libacl1-2.3.2-2.1
+[   18s] [17/164] cumulate libalternatives1-1.2+31.da24cd4-1.1
+[   18s] [18/164] cumulate libatomic1-15.1.1+git10189-1.1
+[   18s] [19/164] cumulate libattr1-2.5.2-1.1
+[   18s] [20/164] cumulate libaudit1-4.0.2-4.1
+[   18s] [21/164] cumulate libbcunit1-5.3.101-1.1
+[   18s] [22/164] cumulate libbz2-1-1.0.8-5.3
+[   18s] [23/164] cumulate libcap-ng0-0.8.5-1.1
+[   18s] [24/164] cumulate libcap2-2.75-1.1
+[   18s] [25/164] cumulate libcrypt1-4.4.38-1.1
+[   18s] [26/164] cumulate libdecaf0-1.0.2-1.1
+[   18s] [27/164] cumulate libeconf0-0.7.10-1.1
+[   18s] [28/164] cumulate libexpat1-2.6.1-1.1
+[   18s] [29/164] cumulate libffi8-3.4.7-1.1
+[   18s] [30/164] cumulate libgcc_s1-15.1.1+git10189-1.1
+[   18s] [31/164] cumulate libgdbm6-1.24-2.1
+[   18s] [32/164] cumulate libgmp10-6.3.0-5.1
+[   18s] [33/164] cumulate libgomp1-15.1.1+git10189-1.1
+[   18s] [34/164] cumulate libgpg-error0-1.55-1.1
+[   18s] [35/164] cumulate libitm1-15.1.1+git10189-1.1
+[   18s] [36/164] cumulate libjitterentropy3-3.6.3-1.1
+[   18s] [37/164] cumulate liblua5_4-5-5.4.8-3.1
+[   18s] [38/164] cumulate liblz1-1.15-1.1
+[   18s] [39/164] cumulate liblz4-1-1.10.0-2.1
+[   18s] [40/164] cumulate liblzma5-5.8.1-1.1
+[   18s] [41/164] cumulate libmbedcrypto7-2.28.10-3.1
+[   18s] [42/164] cumulate libmpdec4-4.0.1-2.1
+[   18s] [43/164] cumulate libpcre2-8-0-10.45-2.1
+[   18s] [44/164] cumulate libpkgconf5-2.2.0-1.1
+[   18s] [45/164] cumulate libpopt0-1.19-1.4
+[   18s] [46/164] cumulate librhash1-1.4.5-1.1
+[   18s] [47/164] cumulate libseccomp2-2.6.0-2.1
+[   18s] [48/164] cumulate libsmartcols1-2.41.1-2.1
+[   18s] [49/164] cumulate libuuid1-2.41.1-2.1
+[   18s] [50/164] cumulate libuv1-1.51.0-1.1
+[   18s] [51/164] cumulate libz1-1.3.1-1.1
+[   18s] [52/164] cumulate libzstd1-1.5.7-3.1
+[   18s] [53/164] cumulate patch-2.8-1.1
+[   18s] [54/164] cumulate update-alternatives-1.22.21-1.1
+[   18s] [55/164] cumulate which-2.23-1.1
+[   18s] [56/164] cumulate libncurses6-6.5.20250726-79.1
+[   18s] [57/164] cumulate jitterentropy-devel-3.6.3-1.1
+[   18s] [58/164] cumulate alts-1.2+31.da24cd4-1.1
+[   18s] [59/164] cumulate libblkid1-2.41.1-2.1
+[   18s] [60/164] cumulate libctf-nobfd0-2.43-10.1
+[   18s] [61/164] cumulate libgdbm_compat4-1.24-2.1
+[   18s] [62/164] cumulate libisl23-0.27-1.1
+[   18s] [63/164] cumulate libmbedx509-1-2.28.10-3.1
+[   18s] [64/164] cumulate libmpfr6-4.2.2-1.1
+[   18s] [65/164] cumulate libreadline8-8.2.13-2.1
+[   18s] [66/164] cumulate libselinux1-3.9-2.1
+[   18s] [67/164] cumulate libstdc++6-15.1.1+git10189-1.1
+[   18s] [68/164] cumulate ncurses-utils-6.5.20250726-79.1
+[   18s] [69/164] cumulate perl-base-5.42.0-1.1
+[   18s] [70/164] cumulate pkgconf-2.2.0-1.1
+[   18s] [71/164] cumulate tack-1.11.20250503-79.1
+[   18s] [72/164] cumulate libelf1-0.192-2.1
+[   18s] [73/164] cumulate libgcrypt20-1.11.1-3.2
+[   18s] [74/164] cumulate libxml2-2-2.13.8-3.1
+[   18s] [75/164] cumulate permctl-1699_20250120-1.2
+[   18s] [76/164] cumulate libmagic1-5.46-4.1
+[   18s] [77/164] cumulate build-mkbaselibs-20250708-1.1
+[   18s] [78/164] cumulate bash-5.2.37-20.1
+[   18s] [79/164] cumulate dwz-0.15-6.1
+[   18s] [80/164] cumulate findutils-4.10.0-2.1
+[   18s] [81/164] cumulate file-5.46-4.1
+[   18s] [82/164] cumulate libasan8-15.1.1+git10189-1.1
+[   18s] [83/164] cumulate libfdisk1-2.41.1-2.1
+[   18s] [84/164] cumulate liblsan0-15.1.1+git10189-1.1
+[   18s] [85/164] cumulate libmount1-2.41.1-2.1
+[   18s] [86/164] cumulate libmpc3-1.3.1-1.5
+[   18s] [87/164] cumulate libtsan2-15.1.1+git10189-1.1
+[   18s] [88/164] cumulate libubsan1-15.1.1+git10189-1.1
+[   18s] [89/164] cumulate sed-4.9-2.2
+[   18s] [90/164] cumulate tar-1.35-4.1
+[   18s] [91/164] cumulate libmbedtls14-2.28.10-3.1
+[   18s] [92/164] cumulate libdw1-0.192-2.1
+[   18s] [93/164] cumulate perl-5.42.0-1.1
+[   18s] [94/164] cumulate bash-sh-5.2.37-20.1
+[   18s] [95/164] cumulate brp-check-suse-84.87+git20230324.8680ce4-1.1
+[   18s] [96/164] cumulate perl-rpm-packaging-1.2-1.1
+[   18s] [97/164] cumulate libasm1-0.192-2.1
+[   18s] [98/164] cumulate cpp15-15.1.1+git10189-1.1
+[   18s] [99/164] cumulate libbctoolbox1-5.3.105-2.1
+[   18s] [100/164] cumulate qemu-linux-user-10.0.2-84.2
+[   18s] [101/164] cumulate cpio-2.15-6.1
+[   18s] [102/164] cumulate cpp-15-1.1
+[   18s] [103/164] cumulate gzip-1.14-1.1
+[   18s] [104/164] cumulate make-4.4.1-3.1
+[   18s] [105/164] cumulate bzip2-1.0.8-5.3
+[   18s] [106/164] cumulate grep-3.12-1.1
+[   18s] [107/164] cumulate pkgconf-pkg-config-2.2.0-1.1
+[   18s] [108/164] cumulate xz-5.8.1-1.1
+[   18s] [109/164] cumulate gettext-runtime-mini-0.25.1-1.1
+[   18s] [110/164] cumulate gawk-5.3.2-1.1
+[   18s] [111/164] cumulate libbctoolbox-tester1-5.3.105-2.1
+[   18s] [112/164] cumulate coreutils-9.7-3.1
+[   18s] [113/164] cumulate elfutils-0.192-2.1
+[   18s] [114/164] cumulate systemd-rpm-macros-26-1.1
+[   18s] [115/164] cumulate libxcrypt-devel-4.4.38-1.1
+[   18s] [116/164] cumulate linux-glibc-devel-6.15-1.1
+[   18s] [117/164] cumulate mbedtls-2-devel-2.28.10-3.1
+[   18s] [118/164] cumulate libopenssl3-3.5.2-1.1
+[   18s] [119/164] cumulate ncurses-devel-6.5.20250726-79.1
+[   18s] [120/164] cumulate permissions-config-1699_20250120-1.2
+[   18s] [121/164] cumulate polkit-default-privs-1550+20250721.f1b71a3-1.1
+[   18s] [122/164] cumulate gettext-tools-mini-0.25.1-1.1
+[   18s] [123/164] cumulate aaa_base-84.87+git20250429.1cad3bc-1.1
+[   18s] [124/164] cumulate aaa_base-malloccheck-84.87+git20250429.1cad3bc-1.1
+[   18s] [125/164] cumulate liboqs5-0.10.0-1.1
+[   18s] [126/164] cumulate permissions-1699_20250120-1.2
+[   18s] [127/164] cumulate bcunit-devel-5.3.101-1.1
+[   18s] [128/164] cumulate glibc-devel-2.41-3.1
+[   18s] [129/164] cumulate rpmlint-mini-2.7.0+git20250710.a7f0a67c-18.38
+[   18s] [130/164] cumulate libarchive13-3.8.1-1.1
+[   18s] [131/164] cumulate zlib-devel-1.3.1-1.1
+[   18s] [132/164] cumulate libstdc++6-devel-gcc15-15.1.1+git10189-1.1
+[   18s] [133/164] cumulate pam-1.7.1-1.1
+[   18s] [134/164] cumulate post-build-checks-84.87+git20250725.0c3a172-1.1
+[   18s] [135/164] cumulate util-linux-2.41.1-2.1
+[   18s] [136/164] cumulate rpm-config-SUSE-20250423-1.1
+[   18s] [137/164] cumulate libctf0-2.43-10.1
+[   18s] [138/164] cumulate lua54-5.4.8-3.1
+[   18s] [139/164] cumulate openssl-3-3.5.2-1.1
+[   18s] [140/164] cumulate python313-base-3.13.5-7.1
+[   18s] [141/164] cumulate compat-usrmerge-build-84.87-5.5
+[   18s] [142/164] cumulate openssl-3.5.2-1.1
+[   18s] [143/164] cumulate python313-packaging-25.0-1.1
+[   18s] [144/164] cumulate libpython3_13-1_0-3.13.5-7.1
+[   18s] [145/164] cumulate lua-interpreter-5-2.1
+[   18s] [146/164] cumulate binutils-2.43-10.1
+[   18s] [147/164] cumulate cmake-mini-4.0.3-1.2
+[   18s] [148/164] cumulate rpm-4.20.1-6.1
+[   18s] [149/164] cumulate cmake-4.0.3-1.2
+[   18s] [150/164] cumulate libopenssl-devel-3.5.2-1.1
+[   18s] [151/164] cumulate python-rpm-packaging-20210526+a18ca48-1.6
+[   18s] [152/164] cumulate build-compare-20240801T083050.024a3a7-1.1
+[   18s] [153/164] cumulate librpmbuild10-4.20.1-6.1
+[   18s] [154/164] cumulate debugedit-5.1-1.1
+[   18s] [155/164] cumulate gcc15-15.1.1+git10189-1.1
+[   18s] [156/164] cumulate gcc15-PIE-15.1.1+git10189-1.1
+[   18s] [157/164] cumulate gcc-15-1.1
+[   18s] [158/164] cumulate libopenssl-3-devel-3.5.2-1.1
+[   18s] [159/164] cumulate bctoolbox-devel-5.3.105-2.1
+[   18s] [160/164] cumulate gcc15-c++-15.1.1+git10189-1.1
+[   18s] [161/164] cumulate gcc-PIE-15-1.1
+[   18s] [162/164] cumulate gcc-c++-15-1.1
+[   18s] [163/164] cumulate liboqs-devel-0.10.0-1.1
+[   18s] [164/164] cumulate rpm-build-4.20.1-6.1
+[   18s] now installing cumulated packages
+[   19s] Preparing...                          ########################################
+[   19s] Updating / installing...
+[   19s] system-user-root-20190513-2.4         ########################################
+[   19s] crypto-policies-20250124.4d262e7-1.1  ########################################
+[   19s] terminfo-base-6.5.20250726-79.1       ########################################
+[   19s] python-rpm-macros-20241120.6ae645f-1.2########################################
+[   19s] pkgconf-m4-2.2.0-1.1                  ########################################
+[   20s] file-magic-5.46-4.1                   ########################################
+[   20s] compat-usrmerge-tools-84.87-5.5       ########################################
+[   20s] filesystem-84.87-18.1                 ########################################
+[   20s] glibc-2.41-3.1                        ########################################
+[   21s] libz1-1.3.1-1.1                       ########################################
+[   21s] libgcc_s1-15.1.1+git10189-1.1         ########################################
+[   21s] libstdc++6-15.1.1+git10189-1.1        ########################################
+[   21s] libzstd1-1.5.7-3.1                    ########################################
+[   21s] libbz2-1-1.0.8-5.3                    ########################################
+[   21s] libgmp10-6.3.0-5.1                    ########################################
+[   21s] liblzma5-5.8.1-1.1                    ########################################
+[   21s] libelf1-0.192-2.1                     ########################################
+[   21s] libacl1-2.3.2-2.1                     ########################################
+[   21s] libncurses6-6.5.20250726-79.1         ########################################
+[   21s] libmpfr6-4.2.2-1.1                    ########################################
+[   22s] libcrypt1-4.4.38-1.1                  ########################################
+[   22s] perl-base-5.42.0-1.1                  ########################################
+[   22s] libreadline8-8.2.13-2.1               ########################################
+[   22s] bash-5.2.37-20.1                      ########################################
+[   22s] bash-sh-5.2.37-20.1                   ########################################
+[   22s] xz-5.8.1-1.1                          ########################################
+[   23s] gawk-5.3.2-1.1                        ########################################
+[   23s] libdw1-0.192-2.1                      ########################################
+[   23s] fillup-1.42-281.1                     ########################################
+[   23s] libcap2-2.75-1.1                      ########################################
+[   23s] libmbedcrypto7-2.28.10-3.1            ########################################
+[   23s] libmbedx509-1-2.28.10-3.1             ########################################
+[   23s] cpio-2.15-6.1                         ########################################
+[   23s] libmpc3-1.3.1-1.5                     ########################################
+[   24s] libisl23-0.27-1.1                     ########################################
+[   24s] libeconf0-0.7.10-1.1                  ########################################
+[   24s] libblkid1-2.41.1-2.1                  ########################################
+[   24s] libgomp1-15.1.1+git10189-1.1          ########################################
+[   24s] libjitterentropy3-3.6.3-1.1           ########################################
+[   24s] liblua5_4-5-5.4.8-3.1                 ########################################
+[   24s] libpopt0-1.19-1.4                     ########################################
+[   24s] libuuid1-2.41.1-2.1                   ########################################
+[   29s] cpp15-15.1.1+git10189-1.1             ########################################
+[   29s] libmbedtls14-2.28.10-3.1              ########################################
+[   29s] permctl-1699_20250120-1.2             ########################################
+[   29s] make-4.4.1-3.1                        ########################################
+[   29s] dwz-0.15-6.1                          ########################################
+[   29s] diffutils-3.12-1.1                    ########################################
+[   29s] libaudit1-4.0.2-4.1                   ########################################
+[   29s] libbcunit1-5.3.101-1.1                ########################################
+[   29s] libexpat1-2.6.1-1.1                   ########################################
+[   30s] libgdbm6-1.24-2.1                     ########################################
+[   30s] libpcre2-8-0-10.45-2.1                ########################################
+[   30s] libselinux1-3.9-2.1                   ########################################
+[   30s] sed-4.9-2.2                           ########################################
+[   30s] grep-3.12-1.1                         ########################################
+[   30s] findutils-4.10.0-2.1                  ########################################
+[   30s] libuv1-1.51.0-1.1                     ########################################
+[   30s] libmount1-2.41.1-2.1                  ########################################
+[   30s] tar-1.35-4.1                          ########################################
+[   30s] libgdbm_compat4-1.24-2.1              ########################################
+[   34s] perl-5.42.0-1.1                       ########################################
+[   34s] perl-rpm-packaging-1.2-1.1            ########################################
+[   34s] cpp-15-1.1                            ########################################
+[   35s] libfdisk1-2.41.1-2.1                  ########################################
+[   35s] jitterentropy-devel-3.6.3-1.1         ########################################
+[   35s] libasm1-0.192-2.1                     ########################################
+[   35s] elfutils-0.192-2.1                    ########################################
+[   35s] gzip-1.14-1.1                         ########################################
+[   35s] bzip2-1.0.8-5.3                       ########################################
+[   35s] ncurses-utils-6.5.20250726-79.1       ########################################
+[   35s] tack-1.11.20250503-79.1               ########################################
+[   35s] libxml2-2-2.13.8-3.1                  ########################################
+[   36s] libasan8-15.1.1+git10189-1.1          ########################################
+[   36s] liblsan0-15.1.1+git10189-1.1          ########################################
+[   36s] libtsan2-15.1.1+git10189-1.1          ########################################
+[   36s] libubsan1-15.1.1+git10189-1.1         ########################################
+[   36s] libctf-nobfd0-2.43-10.1               ########################################
+[   36s] envsubst-mini-0.25.1-1.1              ########################################
+[   37s] gettext-runtime-mini-0.25.1-1.1       ########################################
+[   37s] glibc-gconv-modules-extra-2.41-3.1    ########################################
+[   38s] gettext-tools-mini-0.25.1-1.1         ########################################
+[   39s] glibc-locale-base-2.41-3.1            ########################################
+[   39s] libalternatives1-1.2+31.da24cd4-1.1   ########################################
+[   39s] alts-1.2+31.da24cd4-1.1               ########################################
+[   39s] lua-interpreter-5-2.1                 ########################################
+[   39s] lua54-5.4.8-3.1                       ########################################
+[   39s] libatomic1-15.1.1+git10189-1.1        ########################################
+[   39s] libattr1-2.5.2-1.1                    ########################################
+[   39s] coreutils-9.7-3.1                     ########################################
+[   40s] libopenssl3-3.5.2-1.1                 ########################################
+[   40s] aaa_base-84.87+git20250429.1cad3bc-1.1########################################
+[   40s] Updating /etc/sysconfig/language ...
+[   40s] Updating /etc/sysconfig/proxy ...
+[   40s] aaa_base-malloccheck-84.87+git20250429########################################
+[   40s] liboqs5-0.10.0-1.1                    ########################################
+[   40s] openssl-3.5.2-1.1                     ########################################
+[   41s] openssl-3-3.5.2-1.1                   ########################################
+[   41s] systemd-rpm-macros-26-1.1             ########################################
+[   42s] linux-glibc-devel-6.15-1.1            ########################################
+[   42s] permissions-config-1699_20250120-1.2  ########################################
+[   42s] Updating /etc/sysconfig/security ...
+[   42s] Checking permissions and ownerships - using the permissions files
+[   42s] 	/usr/share/permissions/permissions
+[   42s] 	/usr/share/permissions/permissions.easy
+[   42s] 	/etc/permissions.local
+[   42s] /usr/sbin/unix_chkpwd: setting to root:shadow 4755 (wrong owner/group root:root)
+[   42s] permissions-1699_20250120-1.2         ########################################
+[   42s] pam-1.7.1-1.1                         ########################################
+[   43s] polkit-default-privs-1550+20250721.f1b########################################
+[   43s] Updating /etc/sysconfig/security ...
+[   43s] can't open /etc/polkit-1/rules.d/90-default-privs.rules.new: No such file or directory
+[   43s] warning: %post(polkit-default-privs-1550+20250721.f1b71a3-1.1.noarch) scriptlet failed, exit status 2
+[   43s] libcap-ng0-0.8.5-1.1                  ########################################
+[   43s] libdecaf0-1.0.2-1.1                   ########################################
+[   43s] libbctoolbox1-5.3.105-2.1             ########################################
+[   44s] libbctoolbox-tester1-5.3.105-2.1      ########################################
+[   44s] libffi8-3.4.7-1.1                     ########################################
+[   44s] libgpg-error0-1.55-1.1                ########################################
+[   44s] libgcrypt20-1.11.1-3.2                ########################################
+[   44s] rpm-config-SUSE-20250423-1.1          ########################################
+[   45s] rpm-4.20.1-6.1                        ########################################
+[   45s] Updating /etc/sysconfig/services ...
+[   45s] libitm1-15.1.1+git10189-1.1           ########################################
+[   45s] liblz1-1.15-1.1                       ########################################
+[   45s] libmagic1-5.46-4.1                    ########################################
+[   45s] librpmbuild10-4.20.1-6.1              ########################################
+[   45s] liblz4-1-1.10.0-2.1                   ########################################
+[   45s] libarchive13-3.8.1-1.1                ########################################
+[   45s] libmpdec4-4.0.1-2.1                   ########################################
+[   49s] python313-base-3.13.5-7.1             ########################################
+[   49s] libpython3_13-1_0-3.13.5-7.1          ########################################
+[   49s] python313-packaging-25.0-1.1          ########################################
+[   49s] python-rpm-packaging-20210526+a18ca48-########################################
+[   49s] libpkgconf5-2.2.0-1.1                 ########################################
+[   49s] pkgconf-2.2.0-1.1                     ########################################
+[   49s] pkgconf-pkg-config-2.2.0-1.1          ########################################
+[   49s] libxcrypt-devel-4.4.38-1.1            ########################################
+[   50s] glibc-devel-2.41-3.1                  ########################################
+[   50s] zlib-devel-1.3.1-1.1                  ########################################
+[   50s] libopenssl-3-devel-3.5.2-1.1          ########################################
+[   50s] libopenssl-devel-3.5.2-1.1            ########################################
+[   65s] libstdc++6-devel-gcc15-15.1.1+git10189########################################
+[   66s] mbedtls-2-devel-2.28.10-3.1           ########################################
+[   66s] ncurses-devel-6.5.20250726-79.1       ########################################
+[   66s] bcunit-devel-5.3.101-1.1              ########################################
+[   66s] librhash1-1.4.5-1.1                   ########################################
+[   71s] cmake-mini-4.0.3-1.2                  ########################################
+[   72s] cmake-4.0.3-1.2                       ########################################
+[   72s] libseccomp2-2.6.0-2.1                 ########################################
+[   72s] file-5.46-4.1                         ########################################
+[   72s] libsmartcols1-2.41.1-2.1              ########################################
+[   72s] util-linux-2.41.1-2.1                 ########################################
+[   73s] patch-2.8-1.1                         ########################################
+[   73s] update-alternatives-1.22.21-1.1       ########################################
+[   73s] libctf0-2.43-10.1                     ########################################
+[   77s] binutils-2.43-10.1                    ########################################
+[   77s] update-alternatives: using /usr/bin/ld.bfd to provide /usr/bin/ld (ld) in auto mode
+[  102s] gcc15-15.1.1+git10189-1.1             ########################################
+[  103s] gcc-15-1.1                            ########################################
+[  103s] gcc15-PIE-15.1.1+git10189-1.1         ########################################
+[  108s] gcc15-c++-15.1.1+git10189-1.1         ########################################
+[  108s] debugedit-5.1-1.1                     ########################################
+[  108s] which-2.23-1.1                        ########################################
+[  109s] rpm-build-4.20.1-6.1                  ########################################
+[  109s] gcc-c++-15-1.1                        ########################################
+[  109s] gcc-PIE-15-1.1                        ########################################
+[  109s] build-compare-20240801T083050.024a3a7-########################################
+[  109s] bctoolbox-devel-5.3.105-2.1           ########################################
+[  109s] liboqs-devel-0.10.0-1.1               ########################################
+[  111s] rpmlint-mini-2.7.0+git20250710.a7f0a67########################################
+[  111s] post-build-checks-84.87+git20250725.0c########################################
+[  111s] compat-usrmerge-build-84.87-5.5       ########################################
+[  111s] brp-check-suse-84.87+git20230324.8680c########################################
+[  118s] qemu-linux-user-10.0.2-84.2           ########################################
+[  118s] build-mkbaselibs-20250708-1.1         ########################################
+[  119s] kernel-obs-build-6.15.8-1.1           ########################################
+[  124s] now finalizing build dir...
+[  124s] ... running 01-add_abuild_user_to_trusted_group
+[  125s] ... running 02-set_timezone_to_utc
+[  125s] ... running 03-set-permissions-secure
+[  125s] ... running 11-hack_uname_version_to_kernel_version
+[  128s] setting SOURCE_DATE_EPOCH_MTIME to 1705308429
+[  134s] Running build time source services...
+[  136s] -----------------------------------------------------------------
+[  136s] I have the following modifications for postquantumcryptoengine.spec:
+[  136s] 23c23
+[  136s] < Release:        0
+[  136s] ---
+[  136s] > Release:        1.1
+[  140s] build target is riscv64-suse-linux
+[  140s] -----------------------------------------------------------------
+[  140s] ----- building postquantumcryptoengine.spec (user abuild)
+[  140s] -----------------------------------------------------------------
+[  140s] -----------------------------------------------------------------
+[  143s] setting SOURCE_DATE_EPOCH_MTIME to 1705308429
+[  143s] + exec rpmbuild -ba --define '_srcdefattr (-,root,root)' --nosignature --target=riscv64-suse-linux --undefine _enable_debug_packages --define 'disturl obs://build.opensuse.org/xxx/standard/xxx-failed_postquantumcryptoengine' /home/abuild/rpmbuild/SOURCES/postquantumcryptoengine.spec
+[  144s] Building target platforms: riscv64-suse-linux
+[  144s] Building for target riscv64-suse-linux
+[  144s] using SOURCE_DATE_EPOCH with value 1705308428 as build time
+[  144s] Executing(%mkbuilddir): /usr/bin/env QEMU_STACK_SIZE=64M /usr/bin/bash -e /var/tmp/rpm-tmp.mgk5Ux
+[  144s] Executing(%prep): /usr/bin/env QEMU_STACK_SIZE=64M /usr/bin/bash -e /var/tmp/rpm-tmp.4ZCUIp
+[  144s] + umask 022
+[  144s] + cd /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build
+[  144s] + cd /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build
+[  144s] + rm -rf postquantumcryptoengine-5.4.0~git.20240108
+[  144s] + /usr/lib/rpm/rpmuncompress -x /home/abuild/rpmbuild/SOURCES/postquantumcryptoengine-5.4.0~git.20240108.tar.xz
+[  145s] + STATUS=0
+[  145s] + '[' 0 -ne 0 ']'
+[  145s] + cd postquantumcryptoengine-5.4.0~git.20240108
+[  145s] + /usr/bin/chmod -Rf a+rX,u+w,g-w,o-w .
+[  145s] + RPM_EC=0
+[  145s] ++ jobs -p
+[  145s] + exit 0
+[  145s] Executing(%build): /usr/bin/env QEMU_STACK_SIZE=64M /usr/bin/bash -e /var/tmp/rpm-tmp.1pgb2V
+[  145s] + umask 022
+[  145s] + cd /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build
+[  145s] + /usr/bin/rm -rf /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/BUILDROOT
+[  145s] ++ dirname /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/BUILDROOT
+[  145s] + /usr/bin/mkdir -p /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build
+[  145s] + /usr/bin/mkdir /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/BUILDROOT
+[  145s] + cd postquantumcryptoengine-5.4.0~git.20240108
+[  145s] + ref=/usr/lib/rpm
+[  145s] + mints=0
+[  145s] + case $(uname -m) in
+[  145s] ++ uname -m
+[  146s] + mints=20160911
+[  146s] + for s in guess sub
+[  146s] ++ find -maxdepth 8 -name config.guess
+[  146s] + for s in guess sub
+[  146s] ++ find -maxdepth 8 -name config.sub
+[  146s] + find . -type f -name CMakeLists.txt -exec sed -i -re '/^[[:blank:]]*[sS][eE][tT][[:blank:]]*\([[:blank:]]*(CMAKE_BUILD_TYPE|CMAKE_COLOR_MAKEFILE|CMAKE_INSTALL_PREFIX|CMAKE_VERBOSE_MAKEFILE).*\)/{s/^/#IGNORE /}' '{}' +
+[  146s] + mkdir -p build
+[  146s] + cd build
+[  146s] + /usr/bin/cmake /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/. '-GUnix Makefiles' -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_BINDIR:PATH=bin -DCMAKE_INSTALL_SBINDIR:PATH=sbin -DCMAKE_INSTALL_LIBEXECDIR:PATH=libexec -DCMAKE_INSTALL_SYSCONFDIR:PATH=etc -DCMAKE_INSTALL_SHAREDSTATEDIR:PATH=/var/lib -DCMAKE_INSTALL_LOCALSTATEDIR:PATH=var -DCMAKE_INSTALL_RUNSTATEDIR:PATH=run -DCMAKE_INSTALL_LIBDIR:PATH=lib64 -DCMAKE_INSTALL_INCLUDEDIR:PATH=include -DCMAKE_INSTALL_DATAROOTDIR:PATH=share -DCMAKE_INSTALL_DOCDIR:PATH=share/doc/packages/postquantumcryptoengine -DCMAKE_INSTALL_MANDIR:PATH=share/man -DCMAKE_INSTALL_INFODIR:PATH=share/info -DINCLUDE_INSTALL_DIR:PATH=/usr/include -DLIB_INSTALL_DIR:PATH=/usr/lib64 -DSYSCONF_INSTALL_DIR:PATH=/etc -DSHARE_INSTALL_PREFIX:PATH=/usr/share -DCMAKE_BUILD_TYPE=RelWithDebInfo '-DCMAKE_C_FLAGS=-O2 -Wall -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -Werror=return-type -flto=auto' '-DCMAKE_CXX_FLAGS=-O2 -Wall -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -Werror=return-type -flto=auto' '-DCMAKE_Fortran_FLAGS=-O2 -Wall -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -Werror=return-type -flto=auto' '-DCMAKE_EXE_LINKER_FLAGS=-flto=auto -Wl,--as-needed -Wl,--no-undefined -Wl,-z,now' '-DCMAKE_MODULE_LINKER_FLAGS=-flto=auto -Wl,--as-needed' '-DCMAKE_SHARED_LINKER_FLAGS=-flto=auto -Wl,--as-needed -Wl,--no-undefined -Wl,-z,now' -DLIB_SUFFIX=64 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DBUILD_SHARED_LIBS:BOOL=ON -DBUILD_STATIC_LIBS:BOOL=OFF -DCMAKE_COLOR_MAKEFILE:BOOL=OFF -DCMAKE_INSTALL_DO_STRIP:BOOL=OFF -DCMAKE_MODULES_INSTALL_DIR=/usr/lib64/cmake/postquantumcryptoengine -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_SKIP_INSTALL_RPATH=ON -DENABLE_UNIT_TESTS=OFF
+[  151s] -- The C compiler identification is GNU 15.1.1
+[  155s] -- The CXX compiler identification is GNU 15.1.1
+[  155s] -- Detecting C compiler ABI info
+[  159s] -- Detecting C compiler ABI info - done
+[  159s] -- Check for working C compiler: /usr/bin/cc - skipped
+[  159s] -- Detecting C compile features
+[  159s] -- Detecting C compile features - done
+[  159s] -- Detecting CXX compiler ABI info
+[  163s] -- Detecting CXX compiler ABI info - done
+[  163s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[  163s] -- Detecting CXX compile features
+[  163s] -- Detecting CXX compile features - done
+[  163s] -- Setting install rpath to /usr/lib64
+[  163s] -- Configuring done (17.3s)
+[  164s] -- Generating done (0.1s)
+[  164s] CMake Warning:
+[  164s]   Manually-specified variables were not used by the project:
+[  164s] 
+[  164s]     BUILD_STATIC_LIBS
+[  164s]     CMAKE_Fortran_FLAGS
+[  164s]     CMAKE_INSTALL_DO_STRIP
+[  164s]     INCLUDE_INSTALL_DIR
+[  164s]     LIB_INSTALL_DIR
+[  164s]     LIB_SUFFIX
+[  164s]     SHARE_INSTALL_PREFIX
+[  164s]     SYSCONF_INSTALL_DIR
+[  164s] 
+[  164s] 
+[  164s] -- Build files have been written to: /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build
+[  164s] + /usr/bin/make -O VERBOSE=1 -j4
+[  164s] /usr/bin/cmake -S"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108" -B"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build" --check-build-system CMakeFiles/Makefile.cmake 0
+[  164s] /usr/bin/cmake -E cmake_progress_start "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build/CMakeFiles" "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build//CMakeFiles/progress.marks"
+[  164s] /usr/bin/make  -f CMakeFiles/Makefile2 all
+[  164s] /usr/bin/make  -f src/CMakeFiles/postquantumcryptoengine.dir/build.make src/CMakeFiles/postquantumcryptoengine.dir/depend
+[  164s] make[2]: Entering directory '/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build'
+[  164s] cd "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build" && /usr/bin/cmake -E cmake_depends "Unix Makefiles" "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108" "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src" "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build" "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build/src" "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build/src/CMakeFiles/postquantumcryptoengine.dir/DependInfo.cmake"
+[  164s] make[2]: Leaving directory '/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build'
+[  164s] /usr/bin/make  -f src/CMakeFiles/postquantumcryptoengine.dir/build.make src/CMakeFiles/postquantumcryptoengine.dir/build
+[  166s] make[2]: Entering directory '/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build'
+[  166s] [ 33%] Building C object src/CMakeFiles/postquantumcryptoengine.dir/crypto.c.o
+[  166s] cd "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build/src" && /usr/bin/cc -DHAVE_CONFIG_H -Dpostquantumcryptoengine_EXPORTS -I"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/include" -I"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src" -I"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build" -isystem /usr/include/oqs -O2 -Wall -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -Werror=return-type -flto=auto -O2 -g -DNDEBUG -fPIC  -Wall -Wuninitialized -Wno-error=pragmas -Werror -Wextra -Wunused-parameter -Wno-error=unknown-pragmas -Wuninitialized -Wno-missing-field-initializers -fno-strict-aliasing -Wno-error=deprecated -Wno-error=deprecated-declarations -Werror -Wstrict-prototypes -MD -MT src/CMakeFiles/postquantumcryptoengine.dir/crypto.c.o -MF CMakeFiles/postquantumcryptoengine.dir/crypto.c.o.d -o CMakeFiles/postquantumcryptoengine.dir/crypto.c.o -c "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.c"
+[  166s] make[2]: Leaving directory '/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build'
+[  172s] make[2]: Entering directory '/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build'
+[  172s] [ 66%] Building CXX object src/CMakeFiles/postquantumcryptoengine.dir/crypto.cc.o
+[  172s] cd "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build/src" && /usr/bin/c++ -DHAVE_CONFIG_H -Dpostquantumcryptoengine_EXPORTS -I"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/include" -I"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src" -I"/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build" -isystem /usr/include/oqs -O2 -Wall -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -Werror=return-type -flto=auto -O2 -g -DNDEBUG -std=c++11 -fPIC  -Wall -Wuninitialized -Wno-error=pragmas -Werror -Wextra -Wunused-parameter -Wno-error=unknown-pragmas -Wuninitialized -Wno-missing-field-initializers -fno-strict-aliasing -Wno-error=deprecated -Wno-error=deprecated-declarations -MD -MT src/CMakeFiles/postquantumcryptoengine.dir/crypto.cc.o -MF CMakeFiles/postquantumcryptoengine.dir/crypto.cc.o.d -o CMakeFiles/postquantumcryptoengine.dir/crypto.cc.o -c "/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc"
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:53:30: error: static assertion failed: forwarding oqs hqc define mismatch
+[  172s]    53 | static_assert(HQC128::skSize == OQS_KEM_hqc_128_length_secret_key, "forwarding oqs hqc define mismatch");
+[  172s]       |                              ^
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:53:30: note: the comparison reduces to ‘(2289 == 2305)’
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:55:30: error: static assertion failed: forwarding oqs hqc define mismatch
+[  172s]    55 | static_assert(HQC128::ctSize == OQS_KEM_hqc_128_length_ciphertext, "forwarding oqs hqc define mismatch");
+[  172s]       |                              ^
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:55:30: note: the comparison reduces to ‘(4481 == 4433)’
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:57:30: error: static assertion failed: forwarding oqs hqc define mismatch
+[  172s]    57 | static_assert(HQC192::skSize == OQS_KEM_hqc_192_length_secret_key, "forwarding oqs hqc define mismatch");
+[  172s]       |                              ^
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:57:30: note: the comparison reduces to ‘(4562 == 4586)’
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:59:30: error: static assertion failed: forwarding oqs hqc define mismatch
+[  172s]    59 | static_assert(HQC192::ctSize == OQS_KEM_hqc_192_length_ciphertext, "forwarding oqs hqc define mismatch");
+[  172s]       |                              ^
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:59:30: note: the comparison reduces to ‘(9026 == 8978)’
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:61:30: error: static assertion failed: forwarding oqs hqc define mismatch
+[  172s]    61 | static_assert(HQC256::skSize == OQS_KEM_hqc_256_length_secret_key, "forwarding oqs hqc define mismatch");
+[  172s]       |                              ^
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:61:30: note: the comparison reduces to ‘(7285 == 7317)’
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:63:30: error: static assertion failed: forwarding oqs hqc define mismatch
+[  172s]    63 | static_assert(HQC256::ctSize == OQS_KEM_hqc_256_length_ciphertext, "forwarding oqs hqc define mismatch");
+[  172s]       |                              ^
+[  172s] /home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/src/crypto.cc:63:30: note: the comparison reduces to ‘(14469 == 14421)’
+[  172s] make[2]: *** [src/CMakeFiles/postquantumcryptoengine.dir/build.make:82: src/CMakeFiles/postquantumcryptoengine.dir/crypto.cc.o] Error 1
+[  172s] make[2]: Leaving directory '/home/abuild/rpmbuild/BUILD/postquantumcryptoengine-5.4.0_git.20240108-build/postquantumcryptoengine-5.4.0~git.20240108/build'
+[  172s] make[1]: *** [CMakeFiles/Makefile2:132: src/CMakeFiles/postquantumcryptoengine.dir/all] Error 2
+[  172s] make: *** [Makefile:139: all] Error 2
+[  172s] error: Bad exit status from /var/tmp/rpm-tmp.1pgb2V (%build)
+[  172s] 
+[  172s] RPM build errors:
+[  172s]     Bad exit status from /var/tmp/rpm-tmp.1pgb2V (%build)
+[  172s] ### VM INTERACTION START ###
+[  172s] mount: /: mount point is busy.
+[  172s]        dmesg(1) may have more information after failed mount system call.
+[  172s] Warning: 'remount -o ro /' failed. Triple Syncing..
+[  172s] [  167.815768][    T1] sysrq: Power Off
+[  172s] ### VM INTERACTION END ###
+[  172s] 
+[  172s] i04-ch4d failed "build postquantumcryptoengine.spec" at Sun Aug 10 23:39:27 UTC 2025.
+[  172s] 
+
