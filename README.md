@@ -69,7 +69,7 @@ python client.py
 The dataset is available at [OSF](https://osf.io/7g4ux/files/osfstorage?view_only=b18895dde06b4d5d8054df0616e5fad4), which contains the build results of 219 RISC-V packages (riscv_failed_repair.zip, riscv_succeed_repair.zip).
 
 In total, 219 packages were evaluated. Among them:
-118 packages were successfully repaired (success) by MCPatcher, the overall success rate is 53.88%.
+118 packages were successfully repaired (success) by EvidenT, the overall success rate is 53.88%.
 
 The detail of repair results is as follows:
 
