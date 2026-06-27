@@ -21,13 +21,16 @@ The **Available** badge should be requested after the final artifact is placed o
 
 ## Data
 
-The full dataset is intentionally not committed. Point EvidenT to a local or mounted dataset directory containing `failed_*` package folders:
+The full 219-package RISC-V dataset is intentionally not committed to the Git
+repository. Point EvidenT to a local or mounted copy of the released dataset:
 
 ```bash
-export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_Agentless
+export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_219
 ```
 
 The repository also contains one small sample package under `dataset/obs_data/risc_v`.
+The submitted artifact archive includes an additional reduced validation case
+under `dataset/obs_data/risc_v_reduced`.
 
 ## 30-Minute Smoke Test
 
@@ -57,7 +60,7 @@ Run one RISC-V Docker validation case:
 
 ```bash
 uv run python scripts/validate_package.py \
-  dataset/obs_data/home_lalala123_RISCV_Agentless/failed_python-stomper \
+  dataset/obs_data/risc_v_reduced/failed_python-stomper \
   --package-name failed_python-stomper
 ```
 

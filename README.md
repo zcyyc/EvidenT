@@ -125,10 +125,12 @@ uv run python scripts/smoke_test.py --validate
 
 ### Data
 
-The full dataset is not committed because it is large. Point EvidenT to the directory that contains `failed_*` package folders:
+The full 219-package RISC-V dataset is not committed to the Git repository
+because it is large. For full-dataset analysis, point EvidenT to the released
+dataset directory:
 
 ```bash
-export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_Agentless
+export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_219
 ```
 
 The repository includes one small sample package at:
@@ -137,7 +139,13 @@ The repository includes one small sample package at:
 dataset/obs_data/risc_v/failed_postquantumcryptoengine
 ```
 
-If `EVIDENT_DATA_ROOT` is unset, EvidenT uses the sample dataset configured in `config/paths.yaml`.
+The submitted artifact archive also includes a reduced validation case under:
+
+```text
+dataset/obs_data/risc_v_reduced/failed_python-stomper
+```
+
+If `EVIDENT_DATA_ROOT` is unset, EvidenT uses the small sample dataset configured in `config/paths.yaml`.
 
 ### 30-Minute Smoke Test
 
@@ -231,7 +239,7 @@ The submitted artifact also includes a RISC-V case that reaches package-level
 
 ```bash
 uv run python scripts/validate_package.py \
-  dataset/obs_data/home_lalala123_RISCV_Agentless/failed_python-stomper \
+  dataset/obs_data/risc_v_reduced/failed_python-stomper \
   --package-name failed_python-stomper
 ```
 
@@ -332,7 +340,7 @@ docker run --rm -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v "$PWD":/workspace/EvidenT \
   -v /path/to/obs_data:/data/obs_data:ro \
-  -e EVIDENT_DATA_ROOT=/data/obs_data/home_lalala123_RISCV_Agentless \
+  -e EVIDENT_DATA_ROOT=/data/obs_data/home_lalala123_RISCV_219 \
   evident-artifact
 ```
 

@@ -53,10 +53,10 @@ uv sync
 
 ## Data Requirements
 
-The full dataset is expected outside the repository. Set:
+The full 219-package RISC-V dataset is expected outside the Git repository. Set:
 
 ```bash
-export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_Agentless
+export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_219
 ```
 
 If unset, the repository uses the committed sample package under `dataset/obs_data/risc_v`.
