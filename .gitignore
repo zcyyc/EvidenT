@@ -20,14 +20,27 @@ ENV/
 # ============================
 *.lock
 uv.lock
+!uv.lock
 
 # ============================
 # Logs / Results / Temp outputs
 # ============================
 /auto_repair_results/
+/auto_repair_log_file/
+/auto_repair_log_files/
+/temp_workspace/
+/structured_logs_all/
+/parsed_templates_drain/
+/anomaly_detection_results/
 
 *.log
 *.out
+
+# Keep the committed smoke-test package, but do not commit a full downloaded dataset.
+/dataset/obs_data/*
+!/dataset/obs_data/risc_v/
+!/dataset/obs_data/risc_v/failed_postquantumcryptoengine/
+!/dataset/obs_data/risc_v/failed_postquantumcryptoengine/**
 
 # ============================
 # IDE / Editor files
@@ -56,3 +69,10 @@ Thumbs.db
 build/
 dist/
 *.egg-info/
+
+# ============================
+# Artifact evaluation bundles
+# ============================
+/EvidenT-issta2026-artifact/
+/EvidenT-issta2026-artifact*.tar.gz
+/EvidenT-issta2026-artifact*.tar.gz.sha256

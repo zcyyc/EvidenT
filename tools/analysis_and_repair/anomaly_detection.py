@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from ad.Log_Filtering import process_log_file
 from ad.anomaly_detector import process_file
 from ad.template_parser import process_single_file_drain
-import yaml
+from config_utils import load_config, get_path
 
 
 class RunAnomalyDetection:
@@ -16,14 +16,11 @@ class RunAnomalyDetection:
     def __init__(self, input_dir):
         self.input_dir = input_dir
         self.package_name = pathlib.Path(input_dir).name
-        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.config_path = os.path.join(self.base_dir, "config/paths.yaml")
-        with open(self.config_path, "r") as f:
-            self.config = yaml.safe_load(f)
+        self.config = load_config()
 
-        self.structure_dir = self.config["paths"]["structure_dir"]
-        self.parsed_templates_dir = self.config["paths"]["parsed_templates_dir"]
-        self.anomaly_res_dir = self.config["paths"]["anomaly_res_dir"]
+        self.structure_dir = get_path(self.config, "structure_dir")
+        self.parsed_templates_dir = get_path(self.config, "parsed_templates_dir")
+        self.anomaly_res_dir = get_path(self.config, "anomaly_res_dir")
 
         os.makedirs(self.structure_dir, exist_ok=True)
         os.makedirs(self.parsed_templates_dir, exist_ok=True)

@@ -5,3 +5,38 @@ paths:
   structure_dir: "structured_logs_all"
   parsed_templates_dir: "parsed_templates_drain"
   anomaly_res_dir: "anomaly_detection_results"
+
+run:
+  # Use env vars EVIDENT_PACKAGES or EVIDENT_PACKAGE_LIMIT to override these.
+  package_allowlist: []
+  max_packages:
+
+target:
+  architecture: "riscv64"
+
+validator:
+  # "docker" is the default artifact-friendly backend.
+  # Use "obs" to reproduce the original paper-aligned OBS validation path.
+  backend: "docker"
+
+docker:
+  image: "evident-opensuse-riscv64:latest"
+  pull: "missing"
+  # Empty means use the repositories already configured in the selected image.
+  repo_mirror:
+  # Disabled by default because RISC-V qemu containers can spend a long time in
+  # zypper/GPG key handling. Set true for stricter local validation.
+  gpg_check: false
+  # RISC-V Docker validation uses a preheated image because zypper repository
+  # refresh/install can hang under qemu-riscv64. Keep these true/false values
+  # with the stock openSUSE image if you want full dependency resolution.
+  refresh: false
+  install_buildrequires: false
+  rpmbuild_nodeps: true
+  rpmbuild_defines:
+    - "pythons python313"
+    - "python_flavors python313"
+  timeout_seconds: 3600
+  # Leave empty to infer from target.architecture.
+  # Common values: linux/amd64, linux/arm64, linux/riscv64.
+  platform:

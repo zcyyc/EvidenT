@@ -1,296 +1,349 @@
-# EvidenT: An Evidence-Preserving Framework for Iterative System-Level Package Repair
+# EvidenT: Evidence-Preserving Package Repair
 
-## 👋 Overview
-EvidenT is an automated repair framework for **system-level package builds**.
+EvidenT is an MCP-based framework for iterative system-level package repair. It diagnoses build failures from package artifacts, applies minimal evidence-driven edits, and validates repaired packages through a configurable build backend.
+
+The original paper workflow used the openSUSE Open Build Service (OBS). This artifact keeps that OBS path and adds a Docker-based backend as the default, so reviewers can run validation on a local machine or server without OBS credentials.
 
 <p align="center">
-  <img src="assets/framework.png" width="850">
+  <img src="assets/framework.png" width="850" alt="EvidenT framework">
 </p>
 
-It treats package repair as an evidence-driven and iterative workflow that coordinates:
+## What EvidenT Does
 
-- anomaly-focused log condensation,
-- dependency and recipe-level constraint extraction,
-- historical repair case retrieval,
-- ISA-specific knowledge contextualization,
-- and build-based validation through the Open Build Service (OBS).
+1. Loads failed package artifacts: build logs, `.spec` files, patches, and source archives.
+2. Extracts compact failure signals from noisy build logs.
+3. Retrieves dependency constraints, historical repair cases, and RISC-V knowledge context.
+4. Uses an LLM through MCP tools to make minimal package-level repairs.
+5. Validates the repaired package with either:
+   - `docker`: local/server-side openSUSE RPM build in Docker, default for artifact evaluation.
+   - `obs`: upload and polling through OBS, retained for paper-aligned reproduction.
 
-EvidenT is implemented on top of the **Model Context Protocol (MCP)**, enabling modular tool orchestration across analysis, repair, and validation phases.
-
-
-## 🔍 Repository Structure
+## Repository Layout
 
 ```text
-aiops_pro/
-├── client.py                  # Iterative repair controller (repair loop entry)
-├── server.py                  # MCP tool server exposing repair components
-│
+.
+├── ARTIFACT.md                       # Reviewer-facing artifact checklist
+├── Dockerfile                        # Optional container for the EvidenT driver
+├── client.py                         # MCP repair-loop client
+├── server.py                         # MCP tool server
 ├── config/
-│   └── paths.yaml             # Local paths + OBS configuration
-│
+│   ├── paths.yaml                    # Paths, run bounds, target ISA, validator backend
+│   └── obs_meta.yaml                 # OBS credentials/settings for the OBS backend
+├── dataset/obs_data/risc_v/          # Small committed smoke-test package
 ├── knowledge_base/
-│   ├── history_solution.csv        # Historical repair cases mined from GitHub
-│   └── risc_v_knowledge_base.csv   # ISA-specific Knowledge Context (RISC-V)
-│
-├── temp_workspace/            # Temporary workspaces for package repair runs
-│
+│   ├── history_soluction.csv         # Historical repair cases
+│   └── risc_v_knowledge_base.csv     # RISC-V knowledge context
+├── scripts/
+│   ├── smoke_test.py                 # Fast artifact sanity check
+│   └── validate_package.py           # Validate one package with Docker or OBS
 ├── tools/
-│   ├── analysis_and_repair/   # Failure analysis + localization components
-│   │   ├── anomaly_detection.py      # Anomaly-focused log condensation
-│   │   ├── dependency_constrain.py   # Dependency Constraints from build recipes
-│   │   ├── historical_case.py        # Historical fix retrieval
-│   │   ├── arch_know_search.py       # ISA-specific Knowledge Context search
-│   │   └── localize_structure.py     # Workspace structure localization
-│   │
-│   └── validation/            # Build-based validation components
-│       ├── upload_files.py    # Upload repaired packages to OBS
-│       └── check_build_res.py # Query OBS build status + fetch updated logs
-│
-└── utils/prompts/
-    ├── merged_prompt_loop.txt # Dynamic prompt template used in EvidenT
-    └── prompt_bare_LLM.txt    # Baseline prompt (w/o orchestration)
+│   ├── analysis_and_repair/          # Log analysis, constraints, retrieval, localization
+│   └── validation/
+│       ├── check_build_res.py        # Backend dispatcher
+│       ├── docker_build.py           # Docker/openSUSE RPM validator
+│       └── upload_files.py           # OBS upload helper
+└── utils/prompts/                    # Repair prompts
 ```
 
-## 🚀 Quick Start
-### Activate the virtual environment
+Runtime outputs are ignored by git: `temp_workspace/`, `auto_repair_results/`, `auto_repair_log_files/`, `structured_logs_all/`, `parsed_templates_drain/`, and `anomaly_detection_results/`.
+
+## Getting Started
+
+This artifact is packaged for ISSTA artifact evaluation. It contains the
+EvidenT source code, configuration files, reduced RISC-V package examples, and
+a preheated Docker image tarball for the RISC-V validator.
+
+Reviewers can complete the basic setup and smoke test in under 30 minutes.
+
+### Requirements
+
+- Python 3.11+
+- `uv`
+- Docker with Linux containers
+- For RISC-V Docker validation on a non-RISC-V host: qemu/binfmt support for `linux/riscv64`
+- An OpenAI-compatible API endpoint for full LLM repair-loop runs
+
+See `REQUIREMENTS.md`, `STATUS.md`, and `LICENSE` for the files expected by the ISSTA artifact packaging checklist.
+
+### Setup From The Artifact Archive
+
+Unpack the submitted archive and enter the artifact directory:
+
+```bash
+tar -xzf EvidenT-issta2026-artifact-*.tar.gz
+cd EvidenT-issta2026-artifact-*
 ```
-uv init
-uv add venv
-source .venv/bin/activate
-uv pip install -r requirements.txt
+
+Load the preheated RISC-V validator image before running Docker validation:
+
+```bash
+docker load -i images/evident-opensuse-riscv64.tar.gz
+docker run --rm --platform linux/riscv64 evident-opensuse-riscv64:latest uname -m
 ```
 
-### Run the client and rebuild packages
+The second command should print:
+
+```text
+riscv64
 ```
-python client.py
+
+Install Python dependencies:
+
+```bash
+uv sync
 ```
 
-## 🧩 Build Repair Results
-The dataset is available at [OSF](https://osf.io/7g4ux/files/osfstorage?view_only=b18895dde06b4d5d8054df0616e5fad4), which contains the build results of 219 RISC-V packages (riscv_failed_repair.zip, riscv_succeed_repair.zip).
+### Setup From Git
 
-In total, 219 packages were evaluated. Among them:
-118 packages were successfully repaired (success) by EvidenT, the overall success rate is 53.88%.
+```bash
+git clone https://github.com/zcyyc/EvidenT.git
+cd EvidenT
+uv sync
+cp .env.example .env
+```
 
-The detail of repair results is as follows:
+Fill `.env` for full repair-loop runs:
 
-| package                               | repair result   |
-|:--------------------------------------|:----------------|
-| pixelorama                            | ❌ failed          |
-| python-ly                             | ✅ success         |
-| keylightctl                           | ❌ failed          |
-| trng                                  | ✅ success         |
-| postquantumcryptoengine               | ❌ failed          |
-| rpmconf                               | ❌ failed          |
-| password-store                        | ✅ success         |
-| vdt                                   | ✅ success         |
-| velero-plugin-for-aws                 | ✅ success         |
-| kubectl-browse-pvc                    | ✅ success         |
-| apache2-mod_wsgi                      | ✅ success         |
-| python-guessit                        | ✅ success         |
-| babeltrace2                           | ✅ success         |
-| lpcnet                                | ✅ success         |
-| kubectl-directpv                      | ✅ success         |
-| bazel-rules-go                        | ✅ success         |
-| python-libusb1                        | ✅ success         |
-| python-pyp                            | ❌ failed          |
-| python-dqsegdb                        | ✅ success         |
-| LaTeXML                               | ❌ failed          |
-| python-BitVector                      | ✅ success         |
-| ansible-cmdb                          | ✅ success         |
-| python-flake8-comprehensions          | ✅ success         |
-| velero-plugin-for-csi                 | ❌ failed          |
-| nlopt                                 | ❌ failed         |
-| monitoring-plugins-http_json          | ✅ success         |
-| kubectl-validate                      | ❌ failed          |
-| kubie                                 | ✅ success         |
-| linode-cli                            | ✅ success         |
-| python-safetensors                    | ✅ success         |
-| python-WSME                           | ❌ failed          |
-| python-xsge_lighting                  | ✅ success         |
-| python-pytest-system-statistics       | ✅ success         |
-| perl-local-lib                        | ✅ success         |
-| lib2geom                              | ❌ failed          |
-| perl-gettext                          | ✅ success         |
-| python-subst                          | ✅ success         |
-| python-geomdl                         | ❌ failed          |
-| stb                                   | ❌ failed          |
-| python-jdatetime                      | ❌ failed          |
-| python-traits                         | ✅ success         |
-| ansible-terraform-inventory           | ✅ success         |
-| python-pytest-subprocess              | ✅ success         |
-| gopass                                | ❌ failed          |
-| cjose                                 | ✅ success         |
-| python-hid-parser                     | ❌ failed          |
-| golly                                 | ❌ failed          |
-| opensurge                             | ❌ failed          |
-| python-antlr4-python3-runtime         | ✅ success         |
-| mypaint                               | ✅ success         |
-| rubygem-slim                          | ✅ success         |
-| python-pyscard                        | ❌ failed          |
-| python-safe-netrc                     | ✅ success         |
-| dnsproxy                              | ✅ success         |
-| python-stomper                        | ✅ success         |
-| nginx-module-njs                      | ✅ success         |
-| python-djangorestframework-camel-case | ✅ success         |
-| evemu                                 | ✅ success         |
-| python-model-bakery                   | ✅ success         |
-| rbenv                                 | ✅ success         |
-| just                                  | ✅ success         |
-| python-line_profiler                  | ✅ success         |
-| mcabber                               | ✅ success         |
-| rustscan                              | ❌ failed          |
-| rtl8188gu                             | ❌ failed          |
-| python-pyaes                          | ❌ failed          |
-| python-openstacksdk                   | ❌ failed          |
-| NetworkManager-fortisslvpn            | ✅ success         |
-| python-skyfield                       | ✅ success         |
-| python-python-louvain                 | ✅ success         |
-| sleef                                 | ❌ failed          |
-| cage                                  | ❌ failed          |
-| python-odorik                         | ❌ failed          |
-| python-pylink-square                  | ❌ failed          |
-| python-npTDMS                         | ✅ success         |
-| python-flufl.bounce                   | ✅ success         |
-| python-Js2Py                          | ❌ failed          |
-| python-mrcz                           | ✅ success         |
-| python-django-silk                    | ❌ failed          |
-| python-autopage                       | ❌ failed          |
-| python-astunparse                     | ✅ success         |
-| python-qsymm                          | ✅ success         |
-| python-pytools                        | ❌ failed          |
-| python-pytils                         | ✅ success         |
-| pocl                                  | ❌ failed          |
-| rubygem-gpgme                         | ❌ failed          |
-| hyprpaper                             | ❌ failed          |
-| libsigscan                            | ❌ failed          |
-| python-pyeapi                         | ✅ success         |
-| python-oslo.i18n                      | ✅ success         |
-| python-expiringdict                   | ❌ failed          |
-| python-urwid-readline                 | ✅ success         |
-| python-jellyfish                      | ❌ failed          |
-| python-http-parser                    | ✅ success         |
-| hypridle                              | ❌ failed          |
-| libcec                                | ✅ success         |
-| python-visvis                         | ✅ success         |
-| librseq                               | ✅ success         |
-| libluksde                             | ❌ failed          |
-| python-autoflake                      | ✅ success         |
-| python-ligotimegps                    | ✅ success         |
-| gasket-driver                         | ❌ failed          |
-| perl-SDL                              | ❌ failed          |
-| v4l2loopback                          | ✅ success          |
-| python-Flask-Migrate                  | ✅ success         |
-| ufw                                   | ❌ failed          |
-| gthumb                                | ✅ success         |
-| libnvme                               | ❌ failed          |
-| python-zxcvbn-rs-py                   | ❌ failed          |
-| python-slimit                         | ❌ failed          |
-| python-opt-einsum                     | ✅ success         |
-| python-http-ece                       | ✅ success         |
-| python-django-tastypie                | ❌ failed          |
-| python-simplegeneric                  | ❌ failed          |
-| perl-MouseX-Getopt                    | ✅ success         |
-| tectonic                              | ❌ failed          |
-| python-django-contrib-comments        | ✅ success         |
-| jrnl                                  | ❌ failed          |
-| python-cluster                        | ❌ failed          |
-| libvsmbr                              | ❌ failed          |
-| python-junos-eznc                     | ❌ failed          |
-| python-mediafile                      | ❌ failed          |
-| esc                                   | ✅ success         |
-| gpa                                   | ❌ failed          |
-| python-rencode                        | ❌ failed          |
-| python-aenum                          | ✅ success         |
-| perl-Prima                            | ✅ success         |
-| python-pscript                        | ❌ failed          |
-| python-espeak                         | ❌ failed          |
-| python-slixmpp                        | ❌ failed          |
-| wl-screenrec                          | ❌ failed         |
-| python-wirerope                       | ❌ failed          |
-| rtla                                  | ❌ failed          |
-| perl-SGML-Parser-OpenSP               | ❌ failed          |
-| python-lazyarray                      | ✅ success         |
-| python-anyio3                         | ❌ failed          |
-| gource                                | ❌ failed          |
-| python-pyroma                         | ❌ failed          |
-| libgovirt                             | ✅ success         |
-| python-fb-re2                         | ✅ success         |
-| python-oslo.policy                    | ✅ success         |
-| python-acitoolkit                     | ✅ success         |
-| python-pytaglib                       | ❌ failed          |
-| python-openwrt-luci-rpc               | ❌ failed          |
-| howl                                  | ❌ failed          |
-| python-napalm                         | ✅ success         |
-| python-libusbsio                      | ✅ success         |
-| python-pydub                          | ✅ success         |
-| expat                                 | ❌ failed          |
-| python-txaio                          | ✅ success         |
-| mhvtl                                 | ✅ success         |
-| hobbits                               | ✅ success         |
-| python-boltons                        | ✅ success         |
-| python-python-pptx                    | ✅ success         |
-| python-django-debug-toolbar           | ❌ failed          |
-| libcreg                               | ❌ failed          |
-| python-pegen                          | ✅ success         |
-| python-kafka-python                   | ❌ failed          |
-| element-web                           | ✅ success         |
-| python-numcodecs                      | ✅ success         |
-| pgvector_postgresql17                 | ❌ failed          |
-| python-yappi                          | ❌ failed          |
-| python-reconfigure                    | ✅ success         |
-| openscap-report                       | ✅ success         |
-| python-pandas-datareader              | ❌ failed          |
-| cloudflared                           | ❌ failed          |
-| orthanc-mysql                         | ✅ success         |
-| python-aioquic                        | ✅ success         |
-| python-django-perf-rec                | ✅ success         |
-| libSavitar                            | ❌ failed          |
-| python-dynaconf                       | ❌ failed          |
-| python-exiv2                          | ❌ failed          |
-| python-pulsectl                       | ✅ success         |
-| clazy                                 | ❌ failed         |
-| python-smart-open                     | ✅ success         |
-| pulseview                             | ❌ failed          |
-| python-web.py                         | ❌ failed          |
-| python-PyKMIP                         | ❌ failed          |
-| klp-build                             | ✅ success         |
-| ncmpcpp                               | ❌ failed          |
-| xpadneo                               | ❌ failed          |
-| python-django-sortedm2m               | ✅ success         |
-| python-pprintpp                       | ❌ failed          |
-| python-pyshould                       | ✅ success         |
-| redshift                              | ❌ failed          |
-| coturn                                | ❌ failed          |
-| python-augeas                         | ✅ success         |
-| tiny                                  | ❌ failed          |
-| hotspot                               | ❌ failed          |
-| python-pyct                           | ✅ success         |
-| bird                                  | ✅ success         |
-| rspamd                                | ❌ failed          |
-| python-chroma-hnswlib                 | ✅ success         |
-| reproc                                | ✅ success         |
-| python-psychtoolbox                   | ✅ success         |
-| WindowMaker                           | ❌ failed          |
-| libfsext                              | ✅ success         |
-| python-unittest-xml-reporting         | ✅ success         |
-| med-tools                             | ❌ failed          |
-| python-tiktoken                       | ✅ success         |
-| python-sfs                            | ❌ failed          |
-| python-whatever                       | ✅ success         |
-| python-opencensus-ext-azure           | ❌ failed          |
-| python-azure-devops                   | ❌ failed          |
-| liboqs                                | ✅ success         |
-| python-cpplint                        | ❌ failed          |
-| guake                                 | ✅ success         |
-| python-encore                         | ❌ failed          |
-| python-devpi-common                   | ✅ success         |
-| baresip                               | ✅ success         |
-| ubridge                               | ✅ success         |
-| python-requests-hawk                  | ❌ failed          |
-| python-xkcdpass                       | ✅ success         |
-| lalmetaio                             | ✅ success         |
-| python-rollbar                        | ✅ success         |
-| stalld                                | ❌ failed          |
-| marisa                                | ❌ failed          |
-| highway                               | ✅ success         |
-| clusterssh                            | ✅ success         |
+```bash
+OPENAI_API_KEY="..."
+OPENAI_API_BASE_URL="..."
+```
+
+The Git setup path may download dependencies and rebuild Docker images. The
+submitted artifact archive is preferred for review because it includes the
+preheated validator image.
+
+To use Docker validation from a Git checkout, enable RISC-V binfmt support,
+build the validator image once, and run the smoke test:
+
+```bash
+docker run --rm --privileged tonistiigi/binfmt --install riscv64
+bash scripts/build_validator_image.sh evident-opensuse-riscv64:latest
+uv run python scripts/smoke_test.py
+uv run python scripts/smoke_test.py --validate
+```
+
+### Data
+
+The full dataset is not committed because it is large. Point EvidenT to the directory that contains `failed_*` package folders:
+
+```bash
+export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_Agentless
+```
+
+The repository includes one small sample package at:
+
+```text
+dataset/obs_data/risc_v/failed_postquantumcryptoengine
+```
+
+If `EVIDENT_DATA_ROOT` is unset, EvidenT uses the sample dataset configured in `config/paths.yaml`.
+
+### 30-Minute Smoke Test
+
+Run a fast check that loads the configuration, finds a package, imports the MCP client/server, and parses a `.spec` file:
+
+```bash
+uv run python scripts/smoke_test.py
+```
+
+Expected output ends with:
+
+```text
+lightweight_imports=ok
+spec_parser=ok
+smoke_test=ok
+```
+
+Run the same smoke test plus the configured validator:
+
+```bash
+uv run python scripts/smoke_test.py --validate
+```
+
+For RISC-V Docker builds on an x86 host, enable binfmt first:
+
+```bash
+docker run --rm --privileged tonistiigi/binfmt --install riscv64
+docker run --rm --platform linux/riscv64 registry.opensuse.org/opensuse/tumbleweed:latest uname -m
+```
+
+### Validator Image Check
+
+After loading the submitted image tarball, check that Docker can execute the
+RISC-V image:
+
+```bash
+docker load -i images/evident-opensuse-riscv64.tar.gz
+docker run --rm --platform linux/riscv64 evident-opensuse-riscv64:latest uname -m
+```
+
+Expected output:
+
+```text
+riscv64
+```
+
+## Step-By-Step Reproduction Instructions
+
+This artifact supports two scopes:
+
+- Reduced scope: smoke-test the framework and run one RISC-V Docker package
+  validation case.
+- Full scope: run the MCP repair loop over selected packages with LLM
+  credentials.
+
+### Paper Claims Supported By This Artifact
+
+- EvidenT can drive package repair with MCP tools, prompt templates, package
+  context, and iterative validation.
+- The validation backend is configurable: the original OBS backend is retained,
+  and Docker validation is available for local/server-side review.
+- RISC-V package validation can be exercised without OBS credentials through the
+  preheated `linux/riscv64` Docker validator image.
+- Runtime traces, package logs, and final repair summaries are emitted to
+  inspect the repair process.
+
+### Paper Claims Not Fully Reproduced By The Reduced Artifact
+
+- Full paper-scale quantitative results are not regenerated by default because
+  they require the full dataset, LLM API access, and long-running package build
+  jobs.
+- OBS worker behavior is not exactly reproduced by Docker; OBS remains the
+  paper-aligned backend for authoritative openSUSE build-service validation.
+
+### Validate One Package
+
+```bash
+uv run python scripts/validate_package.py dataset/obs_data/risc_v/failed_postquantumcryptoengine
+```
+
+The Docker backend writes build output to:
+
+```text
+temp_workspace/<package>/log_failed.txt
+```
+
+when used from the full repair loop, or to the package directory passed to `validate_package.py` when used directly.
+
+The submitted artifact also includes a RISC-V case that reaches package-level
+`%check` under Docker:
+
+```bash
+uv run python scripts/validate_package.py \
+  dataset/obs_data/home_lalala123_RISCV_Agentless/failed_python-stomper \
+  --package-name failed_python-stomper
+```
+
+This case is expected to report `Build failed!` before repair. The failure log
+should show Python test failures caused by deprecated `assertEquals` calls,
+demonstrating that the Docker/RISC-V validator reached the package's own test
+suite rather than failing during container setup.
+
+### Run the Full Repair Loop
+
+Use a bounded run for artifact evaluation or debugging:
+
+```bash
+EVIDENT_PACKAGE_LIMIT=1 uv run python client.py
+```
+
+Run a specific package:
+
+```bash
+EVIDENT_PACKAGES=failed_python-stomper uv run python client.py
+```
+
+The main outputs are:
+
+```text
+auto_repair_log_files/<package>.log
+auto_repair_results/<package>_result.txt
+temp_workspace/<package>/
+```
+
+### Switch Validation Backends
+
+Docker is the default in `config/paths.yaml`:
+
+```yaml
+validator:
+  backend: "docker"
+```
+
+The Docker backend runs `rpmbuild -ba` inside an openSUSE container. For
+standard images it can install RPM build tools and `BuildRequires` with
+`zypper`. For RISC-V qemu containers, the submitted configuration uses a
+preheated validator image and disables in-container BuildRequires installation
+because `zypper` repository metadata/GPG handling can stall under qemu-riscv64
+on x86_64 hosts.
+
+For repeated RISC-V validation, build a preheated validator image once:
+
+```bash
+bash scripts/build_validator_image.sh evident-opensuse-riscv64:latest
+```
+
+Then set:
+
+```yaml
+docker:
+  image: "evident-opensuse-riscv64:latest"
+  refresh: false
+  install_buildrequires: false
+  rpmbuild_nodeps: true
+```
+
+This keeps validation on `linux/riscv64`, but avoids repeating repository refresh and base RPM tool installation for every package.
+
+To use OBS, set:
+
+```yaml
+validator:
+  backend: "obs"
+```
+
+and fill `config/obs_meta.yaml`:
+
+```yaml
+obs:
+  url: "https://api.opensuse.org"
+  user_name: "your_obs_user_name"
+  password: "your_obs_project_password"
+  project: "your_obs_project"
+  repository: "standard"
+  architecture: "riscv64"
+```
+
+The MCP tool interface is unchanged. In OBS mode, `upload_file_to_obs_tool` uploads sources and `check_build_result` polls OBS. In Docker mode, upload is skipped and `check_build_result` builds the local package directory directly.
+
+## Optional Driver Container
+
+Build the EvidenT driver image:
+
+```bash
+docker build -t evident-artifact .
+```
+
+Run it with the host Docker socket so the Docker validator can start openSUSE build containers:
+
+```bash
+docker run --rm -it \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v "$PWD":/workspace/EvidenT \
+  -v /path/to/obs_data:/data/obs_data:ro \
+  -e EVIDENT_DATA_ROOT=/data/obs_data/home_lalala123_RISCV_Agentless \
+  evident-artifact
+```
+
+Inside the container:
+
+```bash
+uv run python scripts/smoke_test.py
+```
+
+## Notes and Limitations
+
+- Docker validation approximates OBS by rebuilding the package in openSUSE with `rpmbuild -ba`; it does not enforce every OBS worker feature, such as `_constraints`.
+- OBS remains the authoritative paper-aligned backend.
+- Large full-dataset runs require LLM credentials and can take hours, depending on package count and build time.

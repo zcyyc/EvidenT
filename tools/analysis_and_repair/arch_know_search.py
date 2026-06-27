@@ -1,8 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
-import os
-import yaml
+from config_utils import get_path, load_config
 
 class ArchitectureKnowledgeRetriever:
     """A simple retriever that indexes knowledge entries and supports semantic search."""
@@ -72,10 +71,8 @@ def architecture_knowledge_retriever(query: str):
     :param query: query
     :return: search results
     """
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    with open(os.path.join(base_dir, "config/paths.yaml"), "r", encoding="utf-8") as f:
-        config = yaml.safe_load(f)
-    csv_path = os.path.join(base_dir, config["paths"]["arch_knowledge"])
+    config = load_config()
+    csv_path = get_path(config, "arch_knowledge")
 
     df1 = pd.read_csv(csv_path)
     retriever = ArchitectureKnowledgeRetriever()

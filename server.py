@@ -14,6 +14,7 @@ from tools.analysis_and_repair.localize_structure import get_project_structure_f
 from tools.analysis_and_repair.dependency_constrain import spec_parser_main
 from tools.validation.check_build_res import check_main
 from tools.validation.upload_files import main_upload
+from config_utils import get_validator_backend
 
 
 mcp = FastMCP("auto_repair_server")
@@ -586,7 +587,7 @@ def compress_to_archive_tool(package_path: str):
 
 @mcp.tool()
 def upload_file_to_obs_tool(package_path: str):
-    """Upload repaired package to OBS"""
+    """Upload repaired package to OBS, or no-op when Docker validation is selected."""
     if not os.path.isdir(package_path):
         return f"Error: '{package_path}' is not a directory"
 
@@ -599,6 +600,12 @@ def upload_file_to_obs_tool(package_path: str):
         return f"Error: No .spec file in '{package_path}'"
 
     package_name = os.path.basename(package_path)
+    if get_validator_backend() != "obs":
+        return (
+            "Upload skipped: validator backend is not OBS. "
+            "Docker validation reads the package directory directly; call check_build_result next."
+        )
+
     try:
         obs_result = main_upload(package_name, package_path)
         if "error" in str(obs_result).lower():
@@ -610,10 +617,10 @@ def upload_file_to_obs_tool(package_path: str):
 
 @mcp.tool()
 def check_build_result(input_dir: str, package_name: str):
-    """Check build result in OBS"""
+    """Build and validate the package with the configured backend."""
     try:
-        obs_result = check_main(input_dir, package_name)
-        return f"Build result: {obs_result}"
+        result = check_main(input_dir, package_name)
+        return f"Build result: {result}"
     except Exception as e:
         return f"Build check error: {str(e)}"
 

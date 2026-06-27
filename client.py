@@ -5,11 +5,11 @@ import time
 import traceback
 from typing import Dict, List, Optional, Tuple
 from contextlib import AsyncExitStack
-import yaml
 from dotenv import load_dotenv
 from openai import OpenAI
 from mcp.client.stdio import stdio_client
 from mcp import ClientSession, StdioServerParameters
+from config_utils import get_path, get_validator_backend, load_config
 
 load_dotenv(".env")
 
@@ -47,16 +47,16 @@ class AutoRepairClient:
             base_url=os.getenv("OPENAI_API_BASE_URL"),
         )
 
-        # Path configuration (keep consistent with the original version to facilitate smooth migration)
-        with open("config/paths.yaml", "r") as f:
-            config = yaml.safe_load(f)
-        self.base_dir = config["paths"]["base_dir"]
-        self.result_dir = "auto_repair_results"
-        self.temp_work_dir = "temp_workspace"
-        self.log_dir = "auto_repair_log_files"
+        config = load_config()
+        self.config = config
+        self.base_dir = get_path(config, "base_dir")
+        self.result_dir = get_path(config, "result_dir", "auto_repair_results")
+        self.temp_work_dir = get_path(config, "temp_work_dir", "temp_workspace")
+        self.log_dir = get_path(config, "log_dir", "auto_repair_log_files")
         os.makedirs(self.result_dir, exist_ok=True)
         os.makedirs(self.temp_work_dir, exist_ok=True)
         os.makedirs(self.log_dir, exist_ok=True)
+        self.validator_backend = get_validator_backend(config)
 
         self.server_script = "server.py"
         self.max_retries = max_retries
@@ -130,6 +130,20 @@ class AutoRepairClient:
             return
 
         packages = pkg_info.get("packages", [])
+        package_filter = os.getenv("EVIDENT_PACKAGES")
+        if package_filter:
+            wanted = {p.strip() for p in package_filter.split(",") if p.strip()}
+            packages = [pkg for pkg in packages if pkg in wanted]
+
+        run_cfg = self.config.get("run", {}) or {}
+        allowlist = run_cfg.get("package_allowlist") or []
+        if allowlist:
+            packages = [pkg for pkg in packages if pkg in set(allowlist)]
+
+        limit_value = os.getenv("EVIDENT_PACKAGE_LIMIT") or run_cfg.get("max_packages")
+        if limit_value:
+            packages = packages[: int(limit_value)]
+
         self._log("global", f"Found {len(packages)} packages.")
 
         tools = await self.list_tools()
@@ -233,7 +247,7 @@ class AutoRepairClient:
         messages: List[Dict],
         tools: List[Dict],
     ) -> Tuple[str, bool]:
-        """Process LLM tool calls sequentially; and enforce an upload+verify build fallback at the end of the round."""
+        """Process LLM tool calls sequentially; enforce validation fallback at the end."""
 
         def _txt(x):
             # Compatible with MCP content which may be list[str|{text}]
@@ -385,7 +399,7 @@ class AutoRepairClient:
                 break
 
         # ---------- Fallback: If the model does not explicitly perform upload/verification build, it is enforced by the client ----------
-        if not did_upload:
+        if self.validator_backend == "obs" and not did_upload:
             try:
                 up_res = await self.session.call_tool(
                     "upload_file_to_obs_tool", {"package_path": package_path}

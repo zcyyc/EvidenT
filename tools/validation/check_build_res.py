@@ -3,7 +3,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 from xml.etree import ElementTree
 import time
-import yaml
+from config_utils import load_config
+from tools.validation.docker_build import run_docker_build
 
 
 def download_logs_and_sources(temp_dir, base_url, user_name, password):
@@ -30,15 +31,13 @@ def download_logs_and_sources(temp_dir, base_url, user_name, password):
         return None
 
 
-def check_main(temp_dir: str, package_name: str):
-    with open("config/obs_meta.yaml", "r") as file:
-        config = yaml.safe_load(file)
+def check_obs_main(temp_dir: str, package_name: str, config: dict):
     obs_url = config["obs"]["url"]
     user_name = config["obs"]["user_name"]
     password = config["obs"]["password"]
     project = config["obs"]["project"]
-    repository_name = "standard"
-    architecture_name = "riscv64"
+    repository_name = config["obs"].get("repository", "standard")
+    architecture_name = config["obs"].get("architecture", "riscv64")
 
     max_wait_seconds = 600
     check_interval = 30
@@ -105,3 +104,13 @@ def check_main(temp_dir: str, package_name: str):
             continue
 
     return f"Build timeout! The build has not been completed within {max_wait_seconds} seconds. Default build failed."
+
+
+def check_main(temp_dir: str, package_name: str):
+    config = load_config()
+    backend = (config.get("validator", {}) or {}).get("backend", "docker").lower()
+    if backend == "obs":
+        return check_obs_main(temp_dir, package_name, config)
+    if backend == "docker":
+        return run_docker_build(temp_dir, package_name, config)
+    return f"Build failed! Unknown validator backend: {backend}"

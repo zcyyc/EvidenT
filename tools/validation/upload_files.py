@@ -1,9 +1,7 @@
 import os
 import requests
-import yaml
-from enum import Flag
-from ntpath import isdir
 from requests.auth import HTTPBasicAuth
+from config_utils import load_config
 
 def upload_file_to_obs(
     obs_url: str,
@@ -57,8 +55,7 @@ def upload_file_to_obs(
 
 
 def main_upload(package_name, file_name):
-    with open("config/obs_meta.yaml", "r") as file:
-        config = yaml.safe_load(file)
+    config = load_config()
     obs_url = config["obs"]["url"]
     user_name = config["obs"]["user_name"]
     password = config["obs"]["password"]
