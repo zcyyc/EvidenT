@@ -133,6 +133,10 @@ the released dataset directory:
 export EVIDENT_DATA_ROOT=/path/to/EvidenT-riscv-219-dataset/packages
 ```
 
+The dataset archive also includes `build_diff_summary.csv` and
+`package_manifest.txt`. The 219 directories under `packages/` are selected from
+the `Package` column of `build_diff_summary.csv`.
+
 The repository includes one small sample package at:
 
 ```text
@@ -351,7 +355,7 @@ uv run python scripts/smoke_test.py
 ```
 
 ## Build Repair Results
-The full 219-package dataset is distributed separately as `EvidenT-riscv-219-dataset.tar.gz`. It contains the package inputs corresponding to the build results below.
+The full 219-package dataset is distributed separately as `EvidenT-riscv-219-dataset.tar.gz`. It contains `build_diff_summary.csv`, `package_manifest.txt`, and the package inputs corresponding to the build results below.
 
 In total, 219 packages were evaluated. Among them:
 118 packages were successfully repaired (success) by EvidenT, the overall success rate is 53.88%.

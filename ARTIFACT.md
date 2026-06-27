@@ -28,6 +28,10 @@ EvidenT to a local or mounted copy of the released dataset:
 export EVIDENT_DATA_ROOT=/path/to/EvidenT-riscv-219-dataset/packages
 ```
 
+The dataset archive includes `build_diff_summary.csv` and `package_manifest.txt`.
+The 219 package directories under `packages/` are selected from the `Package`
+column of `build_diff_summary.csv`.
+
 The repository also contains one small sample package under `dataset/obs_data/risc_v`.
 The submitted artifact archive includes an additional reduced validation case
 under `dataset/obs_data/risc_v_reduced`.
