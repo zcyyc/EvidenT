@@ -76,3 +76,5 @@ dist/
 /EvidenT-issta2026-artifact/
 /EvidenT-issta2026-artifact*.tar.gz
 /EvidenT-issta2026-artifact*.tar.gz.sha256
+/EvidenT-riscv-219-dataset*.tar.gz
+/EvidenT-riscv-219-dataset*.tar.gz.sha256

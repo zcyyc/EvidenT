@@ -21,11 +21,11 @@ The **Available** badge should be requested after the final artifact is placed o
 
 ## Data
 
-The full 219-package RISC-V dataset is intentionally not committed to the Git
-repository. Point EvidenT to a local or mounted copy of the released dataset:
+The full 219-package RISC-V dataset is distributed as a separate archive. Point
+EvidenT to a local or mounted copy of the released dataset:
 
 ```bash
-export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_219
+export EVIDENT_DATA_ROOT=/path/to/EvidenT-riscv-219-dataset/packages
 ```
 
 The repository also contains one small sample package under `dataset/obs_data/risc_v`.

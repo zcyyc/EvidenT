@@ -93,11 +93,11 @@ Install Python dependencies:
 uv sync
 ```
 
-### Setup From Git
+### Setup From Source Archive
 
 ```bash
-git clone https://github.com/zcyyc/EvidenT.git
-cd EvidenT
+tar -xzf EvidenT-issta2026-artifact.tar.gz
+cd EvidenT-issta2026-artifact
 uv sync
 cp .env.example .env
 ```
@@ -109,11 +109,11 @@ OPENAI_API_KEY="..."
 OPENAI_API_BASE_URL="..."
 ```
 
-The Git setup path may download dependencies and rebuild Docker images. The
+The source-archive setup path may download dependencies and rebuild Docker images. The
 submitted artifact archive is preferred for review because it includes the
 preheated validator image.
 
-To use Docker validation from a Git checkout, enable RISC-V binfmt support,
+To use Docker validation from a source checkout, enable RISC-V binfmt support,
 build the validator image once, and run the smoke test:
 
 ```bash
@@ -125,12 +125,12 @@ uv run python scripts/smoke_test.py --validate
 
 ### Data
 
-The full 219-package RISC-V dataset is not committed to the Git repository
-because it is large. For full-dataset analysis, point EvidenT to the released
-dataset directory:
+The full 219-package RISC-V dataset is distributed as a separate archive because
+it is large. For full-dataset analysis, extract that archive and point EvidenT to
+the released dataset directory:
 
 ```bash
-export EVIDENT_DATA_ROOT=/path/to/obs_data/home_lalala123_RISCV_219
+export EVIDENT_DATA_ROOT=/path/to/EvidenT-riscv-219-dataset/packages
 ```
 
 The repository includes one small sample package at:
@@ -339,8 +339,8 @@ Run it with the host Docker socket so the Docker validator can start openSUSE bu
 docker run --rm -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v "$PWD":/workspace/EvidenT \
-  -v /path/to/obs_data:/data/obs_data:ro \
-  -e EVIDENT_DATA_ROOT=/data/obs_data/home_lalala123_RISCV_219 \
+  -v /path/to/EvidenT-riscv-219-dataset:/data/EvidenT-riscv-219-dataset:ro \
+  -e EVIDENT_DATA_ROOT=/data/EvidenT-riscv-219-dataset/packages \
   evident-artifact
 ```
 
@@ -351,7 +351,7 @@ uv run python scripts/smoke_test.py
 ```
 
 ## Build Repair Results
-The dataset is available at [OSF](https://osf.io/7g4ux/files/osfstorage?view_only=b18895dde06b4d5d8054df0616e5fad4), which contains the build results of 219 RISC-V packages (riscv_failed_repair.zip, riscv_succeed_repair.zip).
+The full 219-package dataset is distributed separately as `EvidenT-riscv-219-dataset.tar.gz`. It contains the package inputs corresponding to the build results below.
 
 In total, 219 packages were evaluated. Among them:
 118 packages were successfully repaired (success) by EvidenT, the overall success rate is 53.88%.
