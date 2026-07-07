@@ -1,0 +1,5 @@
+<link project="devel:languages:python" package="python-stomper" rev="020b84c8c140a96c9c93cda667c57fa9" baserev="020b84c8c140a96c9c93cda667c57fa9">
+  <patches>
+    <branch/>
+  </patches>
+</link>

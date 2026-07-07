@@ -1,0 +1,1324 @@
+Building target platforms: noarch
+Building for target noarch
+Executing(%mkbuilddir): /usr/bin/bash -e /var/tmp/rpm-tmp.8w4fl2
+Executing(%prep): /usr/bin/bash -e /var/tmp/rpm-tmp.nhFVAI
++ umask 022
++ cd /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build
++ cd /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build
++ rm -rf stomper-0.4.3
++ /usr/lib/rpm/rpmuncompress -x /tmp/rpmbuild/SOURCES/stomper-0.4.3.tar.gz
++ STATUS=0
++ '[' 0 -ne 0 ']'
++ cd stomper-0.4.3
++ /usr/bin/chmod -Rf a+rX,u+w,g-w,o-w .
++ /usr/lib/rpm/rpmuncompress /tmp/rpmbuild/SOURCES/remove-future-requirement.patch
++ /usr/bin/patch -p1 -s --fuzz=0 --no-backup-if-mismatch -f
++ RPM_EC=0
+++ jobs -p
++ exit 0
+Executing(%build): /usr/bin/bash -e /var/tmp/rpm-tmp.27msVe
++ umask 022
++ cd /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build
++ /usr/bin/rm -rf /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT
+++ dirname /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT
++ /usr/bin/mkdir -p /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build
++ /usr/bin/mkdir /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT
++ cd stomper-0.4.3
++ ref=/usr/lib/rpm
++ mints=0
++ case $(uname -m) in
+++ uname -m
++ mints=20160911
++ for s in guess sub
+++ find -maxdepth 8 -name config.guess
++ for s in guess sub
+++ find -maxdepth 8 -name config.sub
+++ '[' -f _current_flavor ']'
+++ true
++ last_flavor=
++ '[' -z '' ']'
++ last_flavor=tmp
++ '[' tmp '!=' python313 ']'
++ '[' -d build ']'
++ '[' -d _build.python313 ']'
++ echo python313
++ python_flavor=python313
++ myargs=
++ '[' -f './dist/*-none-any.whl' ']'
++ /usr/bin/python3.13 -mpip wheel --verbose --progress-bar off --disable-pip-version-check --use-pep517 --no-build-isolation --no-deps --wheel-dir ./build .
+Processing ./.
+  Preparing metadata (pyproject.toml): started
+  Running command Preparing metadata (pyproject.toml)
+  /usr/lib/python3.13/site-packages/setuptools/_distutils/dist.py:289: UserWarning: Unknown distribution option: 'test_suite'
+    warnings.warn(msg)
+  /usr/lib/python3.13/site-packages/setuptools/dist.py:759: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+  !!
+
+          ********************************************************************************
+          Please consider removing the following classifiers in favor of a SPDX license expression:
+
+          License :: OSI Approved :: Apache Software License
+
+          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+          ********************************************************************************
+
+  !!
+    self._finalize_license_expression()
+  running dist_info
+  creating /tmp/pip-modern-metadata-tjre5u2p/stomper.egg-info
+  writing /tmp/pip-modern-metadata-tjre5u2p/stomper.egg-info/PKG-INFO
+  writing dependency_links to /tmp/pip-modern-metadata-tjre5u2p/stomper.egg-info/dependency_links.txt
+  writing top-level names to /tmp/pip-modern-metadata-tjre5u2p/stomper.egg-info/top_level.txt
+  writing manifest file '/tmp/pip-modern-metadata-tjre5u2p/stomper.egg-info/SOURCES.txt'
+  reading manifest file '/tmp/pip-modern-metadata-tjre5u2p/stomper.egg-info/SOURCES.txt'
+  reading manifest template 'MANIFEST.in'
+  adding license file 'LICENSE'
+  writing manifest file '/tmp/pip-modern-metadata-tjre5u2p/stomper.egg-info/SOURCES.txt'
+  creating '/tmp/pip-modern-metadata-tjre5u2p/stomper-0.4.3.dist-info'
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: stomper
+  Building wheel for stomper (pyproject.toml): started
+  Running command Building wheel for stomper (pyproject.toml)
+  /usr/lib/python3.13/site-packages/setuptools/_distutils/dist.py:289: UserWarning: Unknown distribution option: 'test_suite'
+    warnings.warn(msg)
+  /usr/lib/python3.13/site-packages/setuptools/dist.py:759: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+  !!
+
+          ********************************************************************************
+          Please consider removing the following classifiers in favor of a SPDX license expression:
+
+          License :: OSI Approved :: Apache Software License
+
+          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+          ********************************************************************************
+
+  !!
+    self._finalize_license_expression()
+  running bdist_wheel
+  running build
+  running build_py
+  creating build/lib/stomper
+  copying lib/stomper/__init__.py -> build/lib/stomper
+  copying lib/stomper/stomp_10.py -> build/lib/stomper
+  copying lib/stomper/stomp_11.py -> build/lib/stomper
+  copying lib/stomper/stompbuffer.py -> build/lib/stomper
+  copying lib/stomper/utils.py -> build/lib/stomper
+  creating build/lib/stomper/examples
+  copying lib/stomper/examples/__init__.py -> build/lib/stomper/examples
+  copying lib/stomper/examples/receiver.py -> build/lib/stomper/examples
+  copying lib/stomper/examples/sender.py -> build/lib/stomper/examples
+  copying lib/stomper/examples/stompbuffer-rx.py -> build/lib/stomper/examples
+  copying lib/stomper/examples/stompbuffer-tx.py -> build/lib/stomper/examples
+  copying lib/stomper/examples/stomper_usage.py -> build/lib/stomper/examples
+  creating build/lib/stomper/tests
+  copying lib/stomper/tests/__init__.py -> build/lib/stomper/tests
+  copying lib/stomper/tests/teststompbuffer.py -> build/lib/stomper/tests
+  copying lib/stomper/tests/teststomper_10.py -> build/lib/stomper/tests
+  copying lib/stomper/tests/teststomper_11.py -> build/lib/stomper/tests
+  installing to build/bdist.linux-riscv64/wheel
+  running install
+  running install_lib
+  creating build/bdist.linux-riscv64/wheel
+  creating build/bdist.linux-riscv64/wheel/stomper
+  copying build/lib/stomper/__init__.py -> build/bdist.linux-riscv64/wheel/./stomper
+  copying build/lib/stomper/stomp_10.py -> build/bdist.linux-riscv64/wheel/./stomper
+  copying build/lib/stomper/stomp_11.py -> build/bdist.linux-riscv64/wheel/./stomper
+  copying build/lib/stomper/stompbuffer.py -> build/bdist.linux-riscv64/wheel/./stomper
+  copying build/lib/stomper/utils.py -> build/bdist.linux-riscv64/wheel/./stomper
+  creating build/bdist.linux-riscv64/wheel/stomper/examples
+  copying build/lib/stomper/examples/__init__.py -> build/bdist.linux-riscv64/wheel/./stomper/examples
+  copying build/lib/stomper/examples/receiver.py -> build/bdist.linux-riscv64/wheel/./stomper/examples
+  copying build/lib/stomper/examples/sender.py -> build/bdist.linux-riscv64/wheel/./stomper/examples
+  copying build/lib/stomper/examples/stompbuffer-rx.py -> build/bdist.linux-riscv64/wheel/./stomper/examples
+  copying build/lib/stomper/examples/stompbuffer-tx.py -> build/bdist.linux-riscv64/wheel/./stomper/examples
+  copying build/lib/stomper/examples/stomper_usage.py -> build/bdist.linux-riscv64/wheel/./stomper/examples
+  creating build/bdist.linux-riscv64/wheel/stomper/tests
+  copying build/lib/stomper/tests/__init__.py -> build/bdist.linux-riscv64/wheel/./stomper/tests
+  copying build/lib/stomper/tests/teststompbuffer.py -> build/bdist.linux-riscv64/wheel/./stomper/tests
+  copying build/lib/stomper/tests/teststomper_10.py -> build/bdist.linux-riscv64/wheel/./stomper/tests
+  copying build/lib/stomper/tests/teststomper_11.py -> build/bdist.linux-riscv64/wheel/./stomper/tests
+  running install_egg_info
+  running egg_info
+  writing lib/stomper.egg-info/PKG-INFO
+  writing dependency_links to lib/stomper.egg-info/dependency_links.txt
+  deleting lib/stomper.egg-info/requires.txt
+  writing top-level names to lib/stomper.egg-info/top_level.txt
+  reading manifest file 'lib/stomper.egg-info/SOURCES.txt'
+  reading manifest template 'MANIFEST.in'
+  adding license file 'LICENSE'
+  writing manifest file 'lib/stomper.egg-info/SOURCES.txt'
+  Copying lib/stomper.egg-info to build/bdist.linux-riscv64/wheel/./stomper-0.4.3-py3.13.egg-info
+  running install_scripts
+  creating build/bdist.linux-riscv64/wheel/stomper-0.4.3.dist-info/WHEEL
+  creating '/root/.cache/pip/wheels/c5/fa/1a/ad03660d4c43bec7453acab4a8c324d701a0210d832768a59d/tmp882jcc10/.tmp-4uzhg_sy/stomper-0.4.3-py3-none-any.whl' and adding 'build/bdist.linux-riscv64/wheel' to it
+  adding 'stomper/__init__.py'
+  adding 'stomper/stomp_10.py'
+  adding 'stomper/stomp_11.py'
+  adding 'stomper/stompbuffer.py'
+  adding 'stomper/utils.py'
+  adding 'stomper/examples/__init__.py'
+  adding 'stomper/examples/receiver.py'
+  adding 'stomper/examples/sender.py'
+  adding 'stomper/examples/stompbuffer-rx.py'
+  adding 'stomper/examples/stompbuffer-tx.py'
+  adding 'stomper/examples/stomper_usage.py'
+  adding 'stomper/tests/__init__.py'
+  adding 'stomper/tests/teststompbuffer.py'
+  adding 'stomper/tests/teststomper_10.py'
+  adding 'stomper/tests/teststomper_11.py'
+  adding 'stomper-0.4.3.dist-info/licenses/LICENSE'
+  adding 'stomper-0.4.3.dist-info/METADATA'
+  adding 'stomper-0.4.3.dist-info/WHEEL'
+  adding 'stomper-0.4.3.dist-info/top_level.txt'
+  adding 'stomper-0.4.3.dist-info/RECORD'
+  removing build/bdist.linux-riscv64/wheel
+  Building wheel for stomper (pyproject.toml): finished with status 'done'
+  Created wheel for stomper: filename=stomper-0.4.3-py3-none-any.whl size=37921 sha256=423d34d7e5ae9e2a839c3b095fa3d9b66d783f50f41236b4f46dc713769f3c9c
+  Stored in directory: /root/.cache/pip/wheels/c5/fa/1a/ad03660d4c43bec7453acab4a8c324d701a0210d832768a59d
+Successfully built stomper
++ '[' -f ./build/stomper-0.4.3-py3-none-any.whl ']'
++ mkdir -p ./dist
++ cp ./build/stomper-0.4.3-py3-none-any.whl ./dist/
++ RPM_EC=0
+++ jobs -p
++ exit 0
+Executing(%install): /usr/bin/bash -e /var/tmp/rpm-tmp.Lp65FE
++ umask 022
++ cd /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build
++ /usr/bin/rm -rf /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT
++ /usr/bin/mkdir -p /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build
++ /usr/bin/mkdir /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT
++ cd stomper-0.4.3
+++ '[' -f _current_flavor ']'
+++ cat _current_flavor
++ last_flavor=python313
++ '[' -z python313 ']'
++ '[' python313 '!=' python313 ']'
++ echo python313
++ python_flavor=python313
++ myargs=
++ havereq=0
++ '[' -n '' ']'
++ '[' 0 -eq 0 ']'
++ ls ./build/stomper-0.4.3-py3-none-any.whl
+./build/stomper-0.4.3-py3-none-any.whl
++ for w in ./build/*.whl
+++ sed -E 's/([^-]+)-([^-]+)-.+\.whl/\1==\2/'
++++ basename ./build/stomper-0.4.3-py3-none-any.whl
+++ echo stomper-0.4.3-py3-none-any.whl
++ myargs=' stomper==0.4.3'
++ /usr/bin/python3.13 -mpip install --verbose --progress-bar off --disable-pip-version-check --root /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT --no-compile --ignore-installed --no-deps --no-index --find-links ./build stomper==0.4.3
+Using pip 26.1.2 from /usr/lib/python3.13/site-packages/pip (python 3.13)
+Looking in links: ./build
+Processing ./build/stomper-0.4.3-py3-none-any.whl
+Installing collected packages: stomper
+Successfully installed stomper-0.4.3
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ for d in /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib64/python3.13/site-packages
++ '[' -d /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages ']'
++ find /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages -iname '*.pyc' -delete
++ find /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages -iname '*.py' -print0
++ xargs -0 /usr/bin/python3.13 -c $' \nimport sys, py_compile \nfor f in sys.argv[1:]: \n  fp=f[len("/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT"):] \n  print("Generating cached byte-code for " + str(fp)) \n  if sys.version[0] == "2": \n    py_compile.compile(f, dfile=fp) \n  else: \n    for o in [0, 1]: \n      py_compile.compile(f, dfile=fp, optimize=o) \n'
+/usr/lib/python3.13/site-packages/stomper/stompbuffer.py:24: SyntaxWarning: invalid escape sequence '\s'
+/usr/lib/python3.13/site-packages/stomper/stompbuffer.py:24: SyntaxWarning: invalid escape sequence '\s'
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/__init__.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/stomp_10.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/stomp_11.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/stompbuffer.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/utils.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/examples/__init__.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/examples/receiver.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/examples/sender.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/examples/stompbuffer-rx.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/examples/stompbuffer-tx.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/examples/stomper_usage.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/tests/__init__.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/tests/teststompbuffer.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/tests/teststomper_10.py
+Generating cached byte-code for /usr/lib/python3.13/site-packages/stomper/tests/teststomper_11.py
++ for d in /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib64/python3.13/site-packages
++ '[' -d /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib64/python3.13/site-packages ']'
++ myargs='/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/bin/* /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/sbin/*'
++ for f in ${myargs}
++ '[' -f '/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/bin/*' -a -x '/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/bin/*' -a -w '/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/bin/*' ']'
++ for f in ${myargs}
++ '[' -f '/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/sbin/*' -a -x '/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/sbin/*' -a -w '/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/sbin/*' ']'
+++ '[' -f _current_flavor ']'
+++ cat _current_flavor
++ last_flavor=python313
++ '[' -z python313 ']'
++ '[' python313 '!=' python313 ']'
++ echo python313
++ python_flavor=python313
++ /usr/lib/rpm/fdupes_wrapper /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/utils.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/utils.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/stompbuffer.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/stompbuffer.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/stomp_11.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/stomp_11.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/stomp_10.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/stomp_10.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/__init__.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/__pycache__/__init__.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/teststomper_11.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/teststomper_11.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/teststomper_10.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/teststomper_10.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/teststompbuffer.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/teststompbuffer.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/__init__.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/tests/__pycache__/__init__.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/stomper_usage.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/stomper_usage.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/stompbuffer-tx.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/stompbuffer-tx.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/stompbuffer-rx.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/stompbuffer-rx.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/sender.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/sender.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/receiver.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/receiver.cpython-313.pyc
+Linking /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/__init__.cpython-313.opt-1.pyc -> /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages/stomper/examples/__pycache__/__init__.cpython-313.pyc
++ /usr/lib/rpm/brp-compress
++ /usr/lib/rpm/brp-suse
+Executing(%check): /usr/bin/bash -e /var/tmp/rpm-tmp.PMThaz
++ umask 022
++ cd /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build
++ cd stomper-0.4.3
++ set +x
++ export PATH=/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/stomper-0.4.3/build/flavorbin:/sbin:/usr/sbin:/usr/local/sbin:/root/bin:/usr/local/bin:/usr/bin:/bin
++ PATH=/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/stomper-0.4.3/build/flavorbin:/sbin:/usr/sbin:/usr/local/sbin:/root/bin:/usr/local/bin:/usr/bin:/bin
+++ '[' -f _current_flavor ']'
+++ cat _current_flavor
++ last_flavor=python313
++ '[' -z python313 ']'
++ '[' python313 '!=' python313 ']'
++ echo python313
++ python_flavor=python313
++ PYTHONPATH=/tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/BUILDROOT/usr/lib/python3.13/site-packages
++ PYTHONDONTWRITEBYTECODE=1
++ pytest-3.13 --ignore=_build.python313 -v lib/stomper/tests/__init__.py lib/stomper/tests/teststompbuffer.py lib/stomper/tests/teststomper_10.py lib/stomper/tests/teststomper_11.py
+============================= test session starts ==============================
+platform linux -- Python 3.13.13, pytest-9.0.3, pluggy-1.6.0 -- /usr/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/stomper-0.4.3
+collecting ... collected 51 items
+
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test001_testBufferAccretionText FAILED [  1%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test002_testBufferAccretionBinary FAILED [  3%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test003_oneCompleteTextMessage FAILED [  5%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test004_oneCompleteBinaryMessage FAILED [  7%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test005_emptyBufferText FAILED [  9%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test006_emptyBufferBinary FAILED [ 11%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test007_messageFragmentsText FAILED [ 13%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test008_messageFragmentsBinary FAILED [ 15%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test009_confusingMessage FAILED [ 17%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test010_syncBufferNoClobber FAILED [ 19%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test011_syncBufferClobberEverything FAILED [ 21%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test012_syncBufferClobberRubbish FAILED [ 23%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test013_syncBufferClobberEverythingTwice FAILED [ 25%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test014_syncBufferGetGoodMessage FAILED [ 27%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test015_syncBufferClobberGoodMessage FAILED [ 29%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test016_syncBufferHandleEmbeddedNulls FAILED [ 31%]
+lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test017_testAllCommands FAILED [ 33%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testAbort FAILED     [ 35%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testAck FAILED       [ 37%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testBegin FAILED     [ 39%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testBugInFrameUnpack1 FAILED [ 41%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testCommit FAILED    [ 43%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testConnect FAILED   [ 45%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testDisconnect FAILED [ 47%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testEngine FAILED    [ 49%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testEngineToServerMessages FAILED [ 50%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testFrameUnpack2 FAILED [ 52%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testFrameUnpack3 FAILED [ 54%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testFramepack1 FAILED [ 56%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testFramepack2 FAILED [ 58%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testSend FAILED      [ 60%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testSubscribe FAILED [ 62%]
+lib/stomper/tests/teststomper_10.py::Stomper10Test::testUnsubscribe FAILED [ 64%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testAbort FAILED     [ 66%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testAck FAILED       [ 68%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testBegin FAILED     [ 70%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testBugInFrameUnpack1 FAILED [ 72%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testCommit FAILED    [ 74%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testConnect FAILED   [ 76%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testConnectWithHeartbeats FAILED [ 78%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testDisconnect FAILED [ 80%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testEngine FAILED    [ 82%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testEngineToServerMessages FAILED [ 84%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testFrameUnpack2 FAILED [ 86%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testFrameUnpack3 FAILED [ 88%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testFramepack1 FAILED [ 90%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testFramepack2 FAILED [ 92%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testNack FAILED      [ 94%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testSend FAILED      [ 96%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testSubscribe FAILED [ 98%]
+lib/stomper/tests/teststomper_11.py::Stomper11Test::testUnsubscribe FAILED [100%]
+
+=================================== FAILURES ===================================
+_____________ StompBufferTestCase.test001_testBufferAccretionText ______________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test001_testBufferAccretionText>
+
+    def test001_testBufferAccretionText ( self ):
+        """
+        Test to see that the buffer accumulates text
+        messages with no additional padding.
+        """
+        msg1 = makeTextMessage ( 'blah1' )
+        msg2 = makeTextMessage ( 'blah2' )
+        msg3 = makeTextMessage ( 'blah3' )
+        self.sb.appendData ( msg1 )
+        self.sb.appendData ( msg2 )
+        self.sb.appendData ( msg3 )
+        expect = len ( msg1 ) + len ( msg2 ) + len ( msg3 )
+>       self.failUnless ( self.sb.bufferLen() == expect )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:79: AttributeError
+____________ StompBufferTestCase.test002_testBufferAccretionBinary _____________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test002_testBufferAccretionBinary>
+
+    def test002_testBufferAccretionBinary ( self ):
+        """
+        Test to see that the buffer accumulates binary
+        messages with no additional padding.
+        """
+        msg1 = makeBinaryMessage ( 'blah1' )
+        msg2 = makeBinaryMessage ( 'blah2' )
+        msg3 = makeBinaryMessage ( 'blah3' )
+        self.sb.appendData ( msg1 )
+        self.sb.appendData ( msg2 )
+        self.sb.appendData ( msg3 )
+        expect = len ( msg1 ) + len ( msg2 ) + len ( msg3 )
+>       self.failUnless ( self.sb.bufferLen() == expect )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:94: AttributeError
+______________ StompBufferTestCase.test003_oneCompleteTextMessage ______________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test003_oneCompleteTextMessage>
+
+    def test003_oneCompleteTextMessage ( self ):
+        """
+        Put a complete text message into the buffer, read it out again, and
+        verify the decoded message. There are actually lots of little tests,
+        but they're all part of the process of verifying the decoded message.
+    
+        Note that this test will FAIL if Frame.pack() inserts the additional
+        '\n\n' bytes.
+        """
+        msg = self.putAndGetText()
+>       self.failUnless ( messageIsGood )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:107: AttributeError
+_____________ StompBufferTestCase.test004_oneCompleteBinaryMessage _____________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test004_oneCompleteBinaryMessage>
+
+    def test004_oneCompleteBinaryMessage ( self ):
+        """
+        Put a complete binary message into the buffer, read it out again, and
+        verify the decoded message.
+    
+        Note that this test will FAIL if Frame.pack() inserts the additional
+        '\n\n' bytes.
+        """
+        msg = self.putAndGetBinary()
+>       self.failUnless ( messageIsGood ( msg, BINBODY ) )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:119: AttributeError
+_________________ StompBufferTestCase.test005_emptyBufferText __________________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test005_emptyBufferText>
+
+    def test005_emptyBufferText ( self ):
+        """
+        Put a complete text message into the buffer, read it out again, and
+        verify that there is nothing left in the buffer.
+        """
+        # Verify that there are no more messages in the buffer.
+        msg1 = self.putAndGetText()
+        msg2 = self.sb.getOneMessage()
+>       self.failUnless ( msg2 is None )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:130: AttributeError
+________________ StompBufferTestCase.test006_emptyBufferBinary _________________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test006_emptyBufferBinary>
+
+    def test006_emptyBufferBinary ( self ):
+        """
+        Put a complete binary message into the buffer, read it out again, and
+        verify that there is nothing left in the buffer.
+        """
+        # Verify that there are no more messages in the buffer.
+        msg1 = self.putAndGetBinary()
+        msg2 = self.sb.getOneMessage()
+>       self.failUnless ( msg2 is None )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:143: AttributeError
+_______________ StompBufferTestCase.test007_messageFragmentsText _______________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test007_messageFragmentsText>
+
+    def test007_messageFragmentsText ( self ):
+        """
+        Create a text message and check that the we can't read it out until
+        we've fed all parts into the buffer
+        """
+        msg = makeTextMessage()
+        fragment1 = msg [:20]
+        fragment2 = msg [20:]
+        self.sb.appendData ( fragment1 )
+        m = self.sb.getOneMessage()
+>       self.failUnless ( m is None )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:158: AttributeError
+______________ StompBufferTestCase.test008_messageFragmentsBinary ______________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test008_messageFragmentsBinary>
+
+    def test008_messageFragmentsBinary ( self ):
+        """
+        Create a binary message and check that the we can't read it out until
+        we've fed all parts into the buffer
+        """
+        msg = makeBinaryMessage()
+        fragment1 = msg [:20]
+        fragment2 = msg [20:]
+        self.sb.appendData ( fragment1 )
+        m = self.sb.getOneMessage()
+>       self.failUnless ( m is None )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:175: AttributeError
+_________________ StompBufferTestCase.test009_confusingMessage _________________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test009_confusingMessage>
+
+    def test009_confusingMessage ( self ):
+        """
+        Create a confusing message and ensure that the decoder doesn't get
+        tripped up.
+        """
+        # Throw in fake commands, headers, nulls, newlines, everything.
+        body = 'SUBSCRIBE\ncontent-length:27\n\x00\ndestination:/queue/confusion\n\n\x00\n'
+        msg = makeBinaryMessage ( body )
+        self.sb.appendData ( msg )
+        m = self.sb.getOneMessage()
+        # Ensure the headers weren't mangled
+>       self.failUnless ( m [ 'cmd' ] == CMD )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:193: AttributeError
+_______________ StompBufferTestCase.test010_syncBufferNoClobber ________________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test010_syncBufferNoClobber>
+
+    def test010_syncBufferNoClobber ( self ):
+        """
+        Test that syncBuffer doesn't clobber the buffer if it doesn't
+        contain a newline.
+        """
+        self.sb.buffer = 'BLAHBLAH'
+        self.sb.syncBuffer()
+>       self.failUnless ( self.sb.buffer == "BLAHBLAH" )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:211: AttributeError
+___________ StompBufferTestCase.test011_syncBufferClobberEverything ____________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test011_syncBufferClobberEverything>
+
+    def test011_syncBufferClobberEverything ( self ):
+        """
+        Put bunk into the buffer and ensure that it gets detected and removed.
+        In this case, the entire buffer should be killed.
+        """
+        self.sb.buffer = 'rubbish\nmorerubbish'
+        self.sb.syncBuffer()
+>       self.failUnless ( self.sb.bufferIsEmpty() )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:221: AttributeError
+_____________ StompBufferTestCase.test012_syncBufferClobberRubbish _____________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test012_syncBufferClobberRubbish>
+
+    def test012_syncBufferClobberRubbish ( self ):
+        """
+        Put bunk into the buffer and ensure that it gets detected and removed.
+        In this case, only the start of the buffer should be killed, and
+        the remainder should be left alone as it could be a partial command.
+        """
+        self.sb.buffer = 'rubbish\x00\nREMAINDER'
+        self.sb.syncBuffer()
+>       self.failUnless ( self.sb.buffer == "REMAINDER" )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:232: AttributeError
+_________ StompBufferTestCase.test013_syncBufferClobberEverythingTwice _________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test013_syncBufferClobberEverythingTwice>
+
+    def test013_syncBufferClobberEverythingTwice ( self ):
+        """
+        Put bunk into the buffer and ensure that it gets detected and removed.
+        In this case, the entire buffer should be clobbered as once we have
+        removed the corrupt start of the data, it should become obvious that
+        the rest of the buffer is corrupt too.
+        """
+        self.sb.buffer = 'rubbish\x00\nNOTACOMMAND\n'
+        self.sb.syncBuffer()
+>       self.failUnless ( self.sb.bufferIsEmpty() )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:244: AttributeError
+_____________ StompBufferTestCase.test014_syncBufferGetGoodMessage _____________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test014_syncBufferGetGoodMessage>
+
+    def test014_syncBufferGetGoodMessage ( self ):
+        """
+        Put bunk into the buffer, followed by a real message and ensure that
+        the bunk gets detected and removed and the message gets retrieved.
+        """
+        msg = makeTextMessage()
+        self.sb.buffer = 'rubbish\x00\n%s' % ( msg, )
+        self.sb.syncBuffer()
+        m = self.sb.getOneMessage()
+>       self.failUnless ( messageIsGood ( m ) )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:256: AttributeError
+___________ StompBufferTestCase.test015_syncBufferClobberGoodMessage ___________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test015_syncBufferClobberGoodMessage>
+
+    def test015_syncBufferClobberGoodMessage ( self ):
+        """
+        Put bunk into the buffer, followed by a real message NOT
+        separated by '\x00\n' and ensure that the whole buffer gets
+        deleted.
+        """
+        msg = makeTextMessage()
+        self.sb.buffer = 'rubbish\n%s' % ( msg, )
+        self.sb.syncBuffer()
+>       self.failUnless ( self.sb.bufferIsEmpty() )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:268: AttributeError
+__________ StompBufferTestCase.test016_syncBufferHandleEmbeddedNulls ___________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test016_syncBufferHandleEmbeddedNulls>
+
+    def test016_syncBufferHandleEmbeddedNulls ( self ):
+        """
+        Put bunk into the buffer including an embedded '\x00\n' string,
+        followed by a real message, and ensure that all the junk gets deleted
+        but the real message is kept.
+        """
+        msg = makeTextMessage()
+        # The first null byte is embedded rubbish. The next null byte
+        # should be treated as an end-of-frame delineator preceding the
+        # real message.
+        self.sb.buffer = 'rubbish\x00\nmorerubbish\x00\n%s' % ( msg, )
+        self.sb.syncBuffer()
+        m = self.sb.getOneMessage()
+>       self.failUnless ( messageIsGood ( m ) )
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:284: AttributeError
+_________________ StompBufferTestCase.test017_testAllCommands __________________
+
+self = <stomper.tests.teststompbuffer.StompBufferTestCase testMethod=test017_testAllCommands>
+
+    def test017_testAllCommands ( self ):
+        # Intentionally NOT using stomper.VALID_COMMANDS
+        for cmd in [ 'SEND', 'SUBSCRIBE', 'UNSUBSCRIBE', 'BEGIN',
+                     'COMMIT', 'ABORT', 'ACK', 'DISCONNECT',
+                     'CONNECTED', 'MESSAGE', 'RECEIPT', 'ERROR' ]:
+            msg = makeTextMessage ( body = BODY, cmd = cmd )
+            self.sb.appendData ( msg )
+            m = self.sb.getOneMessage()
+>           self.failUnless ( messageIsGood ( m, BODY, cmd ) )
+            ^^^^^^^^^^^^^^^
+E           AttributeError: 'StompBufferTestCase' object has no attribute 'failUnless'
+
+lib/stomper/tests/teststompbuffer.py:294: AttributeError
+___________________________ Stomper10Test.testAbort ____________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testAbort>
+
+    def testAbort(self):
+        transactionid = '1234'
+        correct = "ABORT\ntransaction: %s\n\n\x00\n" % transactionid
+>       self.assertEquals(stomper.abort(transactionid), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:269: AttributeError
+____________________________ Stomper10Test.testAck _____________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testAck>
+
+    def testAck(self):
+        messageid = '1234'
+        transactionid = '9876'
+        header = 'message-id: %s\ntransaction: %s' % (messageid, transactionid)
+        correct = "ACK\n%s\n\n\x00\n" % header
+>       self.assertEquals(stomper.ack(messageid, transactionid), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:281: AttributeError
+___________________________ Stomper10Test.testBegin ____________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testBegin>
+
+    def testBegin(self):
+        transactionid = '1234'
+        correct = "BEGIN\ntransaction: %s\n\n\x00\n" % transactionid
+>       self.assertEquals(stomper.begin(transactionid), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:274: AttributeError
+_____________________ Stomper10Test.testBugInFrameUnpack1 ______________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testBugInFrameUnpack1>
+
+        def testBugInFrameUnpack1(self):
+            msg = """MESSAGE
+    destination:/queue/a
+    message-id: card_data
+    
+    hello queue a
+    
+    \x00
+    """
+            result = stomper.unpack_frame(msg)
+    
+>           self.assertEquals(result['cmd'], 'MESSAGE')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:256: AttributeError
+___________________________ Stomper10Test.testCommit ___________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testCommit>
+
+    def testCommit(self):
+        transactionid = '1234'
+        correct = "COMMIT\ntransaction: %s\n\n\x00\n" % transactionid
+>       self.assertEquals(stomper.commit(transactionid), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:264: AttributeError
+__________________________ Stomper10Test.testConnect ___________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testConnect>
+
+    def testConnect(self):
+        username, password = 'bob', '123'
+        correct = "CONNECT\nlogin:%s\npasscode:%s\n\n\x00\n" % (username, password)
+>       self.assertEquals(stomper.connect(username, password), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:307: AttributeError
+_________________________ Stomper10Test.testDisconnect _________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testDisconnect>
+
+    def testDisconnect(self):
+        correct = "DISCONNECT\n\n\x00\n"
+>       self.assertEquals(stomper.disconnect(), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:311: AttributeError
+___________________________ Stomper10Test.testEngine ___________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testEngine>
+
+        def testEngine(self):
+            """Test the basic state machine.
+            """
+            e = stomper.Engine(testing=True)
+    
+            # test session connected message:
+            msg = """CONNECTED
+    session:ID:snorky.local-49191-1185461799654-3:18
+    
+    \x00
+    """
+            result = stomper.unpack_frame(msg)
+            correct = ''
+            returned = e.react(result)
+>           self.assertEquals(returned, correct)
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:112: AttributeError
+___________________ Stomper10Test.testEngineToServerMessages ___________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testEngineToServerMessages>
+
+    def testEngineToServerMessages(self):
+        """Test the state machines reaction
+        """
+        e = TestEngine()
+    
+        # React to a message which should be an ack:
+        msg = stomper.Frame()
+        msg.cmd = 'MESSAGE'
+        msg.headers = {
+            'destination:': '/queue/a',
+            'message-id:': 'some-message-id'
+        }
+        msg.body = "hello queue a"
+    
+        rc = e.react(msg.pack())
+>       self.assertEquals(rc, 'ack')
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:67: AttributeError
+________________________ Stomper10Test.testFrameUnpack2 ________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testFrameUnpack2>
+
+        def testFrameUnpack2(self):
+            """Testing unpack frame function against MESSAGE
+            """
+            msg = """MESSAGE
+    destination:/queue/a
+    message-id: card_data
+    
+    hello queue a"""
+    
+            result = stomper.unpack_frame(msg)
+    
+>           self.assertEquals(result['cmd'], 'MESSAGE')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:228: AttributeError
+________________________ Stomper10Test.testFrameUnpack3 ________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testFrameUnpack3>
+
+        def testFrameUnpack3(self):
+            """Testing unpack frame function against CONNECTED
+            """
+            msg = """CONNECTED
+    session:ID:snorky.local-49191-1185461799654-3:18
+    """
+            result = stomper.unpack_frame(msg)
+    
+>           self.assertEquals(result['cmd'], 'CONNECTED')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:241: AttributeError
+_________________________ Stomper10Test.testFramepack1 _________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testFramepack1>
+
+        def testFramepack1(self):
+            """Testing pack, unpacking and the Frame class.
+            """
+            # Check bad frame generation:
+            frame = stomper.Frame()
+    
+            def bad():
+                frame.cmd = 'SOME UNNOWN CMD'
+    
+            self.assertRaises(stomper.FrameError, bad)
+    
+            # Generate a MESSAGE frame:
+            frame = stomper.Frame()
+            frame.cmd = 'MESSAGE'
+            frame.headers['destination'] = '/queue/a'
+            frame.headers['message-id'] = 'card_data'
+            frame.body = "hello queue a"
+            result = frame.pack()
+    
+    #        print "\n-- result " + "----" * 10
+    #        pprint.pprint(result)
+    #        print
+    
+            # Try bad message unpack catching:
+            bad_frame = stomper.Frame()
+            self.assertRaises(stomper.FrameError, bad_frame.unpack, None)
+            self.assertRaises(stomper.FrameError, bad_frame.unpack, '')
+    
+            # Try to read the generated frame back in
+            # and then check the variables are set up
+            # correctly:
+            frame2 = stomper.Frame()
+            frame2.unpack(result)
+    
+>           self.assertEquals(frame2.cmd, 'MESSAGE')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:183: AttributeError
+_________________________ Stomper10Test.testFramepack2 _________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testFramepack2>
+
+    def testFramepack2(self):
+        """Testing pack, unpacking and the Frame class.
+        """
+        # Check bad frame generation:
+        frame = stomper.Frame()
+        frame.cmd = 'DISCONNECT'
+        result = frame.pack()
+        correct = 'DISCONNECT\n\n\x00\n'
+>       self.assertEquals(result, correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:215: AttributeError
+____________________________ Stomper10Test.testSend ____________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testSend>
+
+        def testSend(self):
+            dest, transactionid, msg = '/queue/myplace', '', '123 456 789'
+            correct = "SEND\ndestination: %s\n\n%s\x00\n" % (dest, msg)
+            result = stomper.send(dest, msg, transactionid)
+    
+    #        print "result: "
+    #        pprint.pprint(result)
+    #        print
+    #        print "correct: "
+    #        pprint.pprint(correct)
+    #        print
+    
+>           self.assertEquals(result, correct)
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:325: AttributeError
+_________________________ Stomper10Test.testSubscribe __________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testSubscribe>
+
+    def testSubscribe(self):
+        dest, ack = '/queue/all', 'client'
+        correct = "SUBSCRIBE\ndestination: %s\nack: %s\n\n\x00\n" % (dest, ack)
+>       self.assertEquals(stomper.subscribe(dest, ack), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:295: AttributeError
+________________________ Stomper10Test.testUnsubscribe _________________________
+
+self = <stomper.tests.teststomper_10.Stomper10Test testMethod=testUnsubscribe>
+
+    def testUnsubscribe(self):
+        dest = '/queue/all'
+        correct = "UNSUBSCRIBE\ndestination:%s\n\n\x00\n" % dest
+>       self.assertEquals(stomper.unsubscribe(dest), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper10Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_10.py:290: AttributeError
+___________________________ Stomper11Test.testAbort ____________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testAbort>
+
+    def testAbort(self):
+        transactionid = '1234'
+        correct = "ABORT\ntransaction:%s\n\n\x00\n" % transactionid
+>       self.assertEquals(stomper.abort(transactionid), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:269: AttributeError
+____________________________ Stomper11Test.testAck _____________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testAck>
+
+    def testAck(self):
+        subscription = '1'
+        messageid = '1234'
+        transactionid = '9876'
+        header = 'subscription:%s\nmessage-id:%s\ntransaction:%s' % (
+            subscription, messageid, transactionid)
+        correct = "ACK\n%s\n\n\x00\n" % header
+        actual = stomper.ack(messageid, subscription, transactionid)
+>       self.assertEquals(actual, correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:284: AttributeError
+___________________________ Stomper11Test.testBegin ____________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testBegin>
+
+    def testBegin(self):
+        transactionid = '1234'
+        correct = "BEGIN\ntransaction:%s\n\n\x00\n" % transactionid
+>       self.assertEquals(stomper.begin(transactionid), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:274: AttributeError
+_____________________ Stomper11Test.testBugInFrameUnpack1 ______________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testBugInFrameUnpack1>
+
+        def testBugInFrameUnpack1(self):
+            msg = """MESSAGE
+    destination:/queue/a
+    message-id:card_data
+    
+    hello queue a
+    
+    \x00
+    """
+            result = stomper.unpack_frame(msg)
+    
+>           self.assertEquals(result['cmd'], 'MESSAGE')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:256: AttributeError
+___________________________ Stomper11Test.testCommit ___________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testCommit>
+
+    def testCommit(self):
+        transactionid = '1234'
+        correct = "COMMIT\ntransaction:%s\n\n\x00\n" % transactionid
+>       self.assertEquals(stomper.commit(transactionid), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:264: AttributeError
+__________________________ Stomper11Test.testConnect ___________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testConnect>
+
+    def testConnect(self):
+        username, password = 'bob', '123'
+        correct = "CONNECT\naccept-version:1.1\nhost:localhost\nheart-beat:0,0\nlogin:%s\npasscode:%s\n\n\x00\n" % (username, password)
+>       self.assertEquals(stomper.connect(username, password, 'localhost'), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:328: AttributeError
+___________________ Stomper11Test.testConnectWithHeartbeats ____________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testConnectWithHeartbeats>
+
+    def testConnectWithHeartbeats(self):
+        username, password = 'bob', '123'
+        heartbeats = (1000, 1000)
+        correct = "CONNECT\naccept-version:1.1\nhost:localhost\nheart-beat:1000,1000\nlogin:%s\npasscode:%s\n\n\x00\n" % (username, password)
+>       self.assertEquals(stomper.connect(username, password, 'localhost', heartbeats=heartbeats), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:334: AttributeError
+_________________________ Stomper11Test.testDisconnect _________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testDisconnect>
+
+    def testDisconnect(self):
+        correct = "DISCONNECT\nreceipt:77\n\x00\n"
+>       self.assertEquals(stomper.disconnect(77), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:338: AttributeError
+___________________________ Stomper11Test.testEngine ___________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testEngine>
+
+        def testEngine(self):
+            """Test the basic state machine.
+            """
+            e = stomper.Engine(testing=True)
+    
+            # test session connected message:
+            msg = """CONNECTED
+    version:1.1
+    session:ID:snorky.local-49191-1185461799654-3:18
+    
+    \x00
+    """
+            result = stomper.unpack_frame(msg)
+            correct = ''
+            returned = e.react(result)
+>           self.assertEquals(returned, correct)
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:116: AttributeError
+___________________ Stomper11Test.testEngineToServerMessages ___________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testEngineToServerMessages>
+
+    def testEngineToServerMessages(self):
+        """Test the state machines reaction
+        """
+        e = TestEngine()
+    
+        # React to a message which should be an ack:
+        msg = stomper.Frame()
+        msg.cmd = 'MESSAGE'
+        msg.headers = {
+            'subscription': 1,
+            'destination:': '/queue/a',
+            'message-id:': 'some-message-id',
+            'content-type': 'text/plain',
+        }
+        msg.body = "hello queue a"
+    
+        rc = e.react(msg.pack())
+>       self.assertEquals(rc, 'ack')
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:70: AttributeError
+________________________ Stomper11Test.testFrameUnpack2 ________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testFrameUnpack2>
+
+        def testFrameUnpack2(self):
+            """Testing unpack frame function against MESSAGE
+            """
+            msg = """MESSAGE
+    destination:/queue/a
+    message-id:card_data
+    
+    hello queue a"""
+    
+            result = stomper.unpack_frame(msg)
+    
+>           self.assertEquals(result['cmd'], 'MESSAGE')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:227: AttributeError
+________________________ Stomper11Test.testFrameUnpack3 ________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testFrameUnpack3>
+
+        def testFrameUnpack3(self):
+            """Testing unpack frame function against CONNECTED
+            """
+            msg = """CONNECTED
+    version:1.1
+    session:ID:snorky.local-49191-1185461799654-3:18
+    """
+            result = stomper.unpack_frame(msg)
+    
+>           self.assertEquals(result['cmd'], 'CONNECTED')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:241: AttributeError
+_________________________ Stomper11Test.testFramepack1 _________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testFramepack1>
+
+        def testFramepack1(self):
+            """Testing pack, unpacking and the Frame class.
+            """
+            # Check bad frame generation:
+            frame = stomper.Frame()
+    
+            def bad():
+                frame.cmd = 'SOME UNNOWN CMD'
+    
+            self.assertRaises(stomper.FrameError, bad)
+    
+            # Generate a MESSAGE frame:
+            frame = stomper.Frame()
+            frame.cmd = 'MESSAGE'
+            frame.headers['destination'] = '/queue/a'
+            frame.headers['message-id'] = 'card_data'
+            frame.body = "hello queue a"
+            result = frame.pack()
+    
+    #        print "\n-- result " + "----" * 10
+    #        pprint.pprint(result)
+    #        print
+    
+            # Try bad message unpack catching:
+            bad_frame = stomper.Frame()
+            self.assertRaises(stomper.FrameError, bad_frame.unpack, None)
+            self.assertRaises(stomper.FrameError, bad_frame.unpack, '')
+    
+            # Try to read the generated frame back in
+            # and then check the variables are set up
+            # correctly:
+            frame2 = stomper.Frame()
+            frame2.unpack(result)
+    
+>           self.assertEquals(frame2.cmd, 'MESSAGE')
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:189: AttributeError
+_________________________ Stomper11Test.testFramepack2 _________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testFramepack2>
+
+    def testFramepack2(self):
+        """Testing pack, unpacking and the Frame class.
+        """
+        # Check bad frame generation:
+        frame = stomper.Frame()
+        frame.cmd = 'DISCONNECT'
+        result = frame.pack()
+        correct = 'DISCONNECT\n\n\x00\n'
+>       self.assertEquals(result, correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:214: AttributeError
+____________________________ Stomper11Test.testNack ____________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testNack>
+
+    def testNack(self):
+        subscription = '1'
+        messageid = '1234'
+        transactionid = '9876'
+        header = 'subscription:%s\nmessage-id:%s\ntransaction:%s' % (
+            subscription, messageid, transactionid)
+        correct = "NACK\n%s\n\n\x00\n" % header
+        actual = stomper.nack(messageid, subscription, transactionid)
+>       self.assertEquals(actual, correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:300: AttributeError
+____________________________ Stomper11Test.testSend ____________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testSend>
+
+    def testSend(self):
+        dest, transactionid, msg = '/queue/myplace', '', '123 456 789'
+        correct = "SEND\ndestination:%s\ncontent-type:text/plain\n\n%s\x00\n" % (dest, msg)
+        result = stomper.send(dest, msg, transactionid)
+    
+>       self.assertEquals(result, correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:345: AttributeError
+_________________________ Stomper11Test.testSubscribe __________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testSubscribe>
+
+    def testSubscribe(self):
+        dest, ack = '/queue/all', 'client'
+        correct = "SUBSCRIBE\nid:0\ndestination:%s\nack:%s\n\n\x00\n" % (dest, ack)
+>       self.assertEquals(stomper.subscribe(dest, 0, ack), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:316: AttributeError
+________________________ Stomper11Test.testUnsubscribe _________________________
+
+self = <stomper.tests.teststomper_11.Stomper11Test testMethod=testUnsubscribe>
+
+    def testUnsubscribe(self):
+        subscription = '1'
+        correct = "UNSUBSCRIBE\nid:%s\n\n\x00\n" % subscription
+>       self.assertEquals(stomper.unsubscribe(subscription), correct)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Stomper11Test' object has no attribute 'assertEquals'. Did you mean: 'assertEqual'?
+
+lib/stomper/tests/teststomper_11.py:311: AttributeError
+=============================== warnings summary ===============================
+lib/stomper/stompbuffer.py:24
+  /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/stomper-0.4.3/lib/stomper/stompbuffer.py:24: SyntaxWarning: invalid escape sequence '\s'
+    content_length_re = re.compile ( '\ncontent-length\s*:\s*(\d+)\s*\n' )
+
+lib/stomper/tests/teststomper_10.py:25
+  /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/stomper-0.4.3/lib/stomper/tests/teststomper_10.py:25: PytestCollectionWarning: cannot collect test class 'TestEngine' because it has a __init__ constructor (from: lib/stomper/tests/teststomper_10.py)
+    class TestEngine(stomper.Engine):
+
+lib/stomper/tests/teststomper_11.py:26
+  /tmp/rpmbuild/BUILD/python-stomper-0.4.3-build/stomper-0.4.3/lib/stomper/tests/teststomper_11.py:26: PytestCollectionWarning: cannot collect test class 'TestEngine' because it has a __init__ constructor (from: lib/stomper/tests/teststomper_11.py)
+    class TestEngine(stomper.Engine):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test001_testBufferAccretionText
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test002_testBufferAccretionBinary
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test003_oneCompleteTextMessage
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test004_oneCompleteBinaryMessage
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test005_emptyBufferText
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test006_emptyBufferBinary
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test007_messageFragmentsText
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test008_messageFragmentsBinary
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test009_confusingMessage
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test010_syncBufferNoClobber
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test011_syncBufferClobberEverything
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test012_syncBufferClobberRubbish
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test013_syncBufferClobberEverythingTwice
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test014_syncBufferGetGoodMessage
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test015_syncBufferClobberGoodMessage
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test016_syncBufferHandleEmbeddedNulls
+FAILED lib/stomper/tests/teststompbuffer.py::StompBufferTestCase::test017_testAllCommands
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testAbort - Attrib...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testAck - Attribut...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testBegin - Attrib...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testBugInFrameUnpack1
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testCommit - Attri...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testConnect - Attr...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testDisconnect - A...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testEngine - Attri...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testEngineToServerMessages
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testFrameUnpack2
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testFrameUnpack3
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testFramepack1 - A...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testFramepack2 - A...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testSend - Attribu...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testSubscribe - At...
+FAILED lib/stomper/tests/teststomper_10.py::Stomper10Test::testUnsubscribe - ...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testAbort - Attrib...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testAck - Attribut...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testBegin - Attrib...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testBugInFrameUnpack1
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testCommit - Attri...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testConnect - Attr...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testConnectWithHeartbeats
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testDisconnect - A...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testEngine - Attri...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testEngineToServerMessages
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testFrameUnpack2
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testFrameUnpack3
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testFramepack1 - A...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testFramepack2 - A...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testNack - Attribu...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testSend - Attribu...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testSubscribe - At...
+FAILED lib/stomper/tests/teststomper_11.py::Stomper11Test::testUnsubscribe - ...
+======================== 51 failed, 3 warnings in 3.29s ========================
+error: Bad exit status from /var/tmp/rpm-tmp.PMThaz (%check)
+
+RPM build errors:
+    Bad exit status from /var/tmp/rpm-tmp.PMThaz (%check)

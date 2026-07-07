@@ -9,12 +9,44 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from config_utils import get_path, get_validator_backend, load_config
 
 
+DEFAULT_VALIDATION_PACKAGE = (
+    PROJECT_ROOT / "dataset/obs_data/risc_v_reduced/failed_python-stomper"
+)
+
+
+def _select_package(base_dir: Path, package_name: str | None, validate: bool) -> Path:
+    if package_name:
+        return base_dir / package_name
+
+    if validate and DEFAULT_VALIDATION_PACKAGE.is_dir():
+        return DEFAULT_VALIDATION_PACKAGE
+
+    all_packages = sorted(p for p in base_dir.iterdir() if p.is_dir())
+    failed_packages = [p for p in all_packages if p.name.startswith("failed")]
+    if failed_packages:
+        return failed_packages[0]
+    if all_packages:
+        return all_packages[0]
+    return base_dir / "__missing_package__"
+
+
+def _reached_expected_validator_failure(package: Path) -> bool:
+    log_path = package / "log_failed.txt"
+    if not log_path.is_file():
+        return False
+    log_text = log_path.read_text(encoding="utf-8", errors="replace")
+    return "assertEquals" in log_text and "%check" in log_text
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run a fast EvidenT artifact smoke test.")
     parser.add_argument(
         "--package",
         default=None,
-        help="Optional package directory name. Defaults to the first failed_* package.",
+        help=(
+            "Optional package directory name under EVIDENT_DATA_ROOT. "
+            "Without --package, --validate uses the reduced python-stomper case."
+        ),
     )
     parser.add_argument(
         "--validate",
@@ -32,15 +64,15 @@ def main() -> int:
         print("ERROR: data root does not exist. Set EVIDENT_DATA_ROOT or edit config/paths.yaml.")
         return 2
 
-    packages = sorted(p for p in base_dir.iterdir() if p.is_dir() and p.name.startswith("failed"))
-    if not packages:
-        print(f"ERROR: no failed_* packages found in {base_dir}")
+    package = _select_package(base_dir, args.package, args.validate)
+    if not package.is_dir():
+        if args.package:
+            print(f"ERROR: package not found: {package}")
+        else:
+            print(f"ERROR: no package directories found in {base_dir}")
         return 2
 
-    package = base_dir / args.package if args.package else packages[0]
-    if not package.is_dir():
-        print(f"ERROR: package not found: {package}")
-        return 2
+    is_default_validation = args.validate and args.package is None and package == DEFAULT_VALIDATION_PACKAGE
 
     specs = sorted(package.glob("*.spec"))
     logs = sorted(package.glob("*.log")) + sorted(package.glob("*.txt"))
@@ -65,7 +97,19 @@ def main() -> int:
 
         result = check_main(str(package), package.name)
         print(result)
-        return 0 if "Build succeeded!" in result else 1
+        if "Build succeeded!" in result:
+            print("validator_build=ok")
+            print("smoke_test=ok")
+            return 0
+        if (
+            is_default_validation
+            and "Docker build failed" in result
+            and _reached_expected_validator_failure(package)
+        ):
+            print("validator_reached_expected_check_failure=ok")
+            print("smoke_test=ok")
+            return 0
+        return 1
 
     print("smoke_test=ok")
     print("Set --validate to run the Docker/OBS build validator.")

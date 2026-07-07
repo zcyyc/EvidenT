@@ -57,6 +57,10 @@ To include the configured validator:
 uv run python scripts/smoke_test.py --validate
 ```
 
+This uses the reduced `failed_python-stomper` case by default. The unrepaired
+package is expected to fail in `%check`; the smoke test succeeds when the Docker
+validator reaches that expected package-level test failure.
+
 ## Reduced Reproduction Scope
 
 Run one RISC-V Docker validation case:
@@ -78,7 +82,9 @@ The submitted RISC-V configuration uses a preheated validator image and
 `rpmbuild --nodeps` to avoid `zypper` stalls under qemu-riscv64.
 
 ```bash
-uv run python scripts/validate_package.py dataset/obs_data/risc_v/failed_postquantumcryptoengine
+uv run python scripts/validate_package.py \
+  dataset/obs_data/risc_v_reduced/failed_python-stomper \
+  --package-name failed_python-stomper
 ```
 
 For RISC-V validation on an x86 host, enable binfmt first:

@@ -41,6 +41,9 @@ uv.lock
 !/dataset/obs_data/risc_v/
 !/dataset/obs_data/risc_v/failed_postquantumcryptoengine/
 !/dataset/obs_data/risc_v/failed_postquantumcryptoengine/**
+!/dataset/obs_data/risc_v_reduced/
+!/dataset/obs_data/risc_v_reduced/failed_python-stomper/
+!/dataset/obs_data/risc_v_reduced/failed_python-stomper/**
 
 # ============================
 # IDE / Editor files

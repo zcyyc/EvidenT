@@ -172,6 +172,11 @@ Run the same smoke test plus the configured validator:
 uv run python scripts/smoke_test.py --validate
 ```
 
+By default this validator smoke test uses the reduced `failed_python-stomper`
+case. The unrepaired package is expected to fail in `%check`; `smoke_test.py
+--validate` returns success when the Docker/RISC-V validator reaches that
+expected package-level test failure.
+
 For RISC-V Docker builds on an x86 host, enable binfmt first:
 
 ```bash
@@ -226,7 +231,9 @@ This artifact supports two scopes:
 ### Validate One Package
 
 ```bash
-uv run python scripts/validate_package.py dataset/obs_data/risc_v/failed_postquantumcryptoengine
+uv run python scripts/validate_package.py \
+  dataset/obs_data/risc_v_reduced/failed_python-stomper \
+  --package-name failed_python-stomper
 ```
 
 The Docker backend writes build output to:
