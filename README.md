@@ -1,8 +1,15 @@
 # EvidenT: Evidence-Preserving Package Repair
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20972389.svg)](https://doi.org/10.5281/zenodo.20972389)
+
 EvidenT is an MCP-based framework for iterative system-level package repair. It diagnoses build failures from package artifacts, applies minimal evidence-driven edits, and validates repaired packages through a configurable build backend.
 
 The original paper workflow used the openSUSE Open Build Service (OBS). This artifact keeps that OBS path and adds a Docker-based backend as the default, so reviewers can run validation on a local machine or server without OBS credentials.
+
+The evaluated artifact and complete 219-package dataset are archived on Zenodo:
+
+- **Evaluated version:** [10.5281/zenodo.20972389](https://doi.org/10.5281/zenodo.20972389)
+- **All versions:** [10.5281/zenodo.20970807](https://doi.org/10.5281/zenodo.20970807)
 
 <p align="center">
   <img src="assets/framework.png" width="850" alt="EvidenT framework">
@@ -17,12 +24,15 @@ The original paper workflow used the openSUSE Open Build Service (OBS). This art
 5. Validates the repaired package with either:
    - `docker`: local/server-side openSUSE RPM build in Docker, default for artifact evaluation.
    - `obs`: upload and polling through OBS, retained for paper-aligned reproduction.
+     See `OBS_GUIDE.md` for reviewer-owned project setup, RISC-V repository
+     configuration, package upload, and build-log inspection.
 
 ## Repository Layout
 
 ```text
 .
 ├── ARTIFACT.md                       # Reviewer-facing artifact checklist
+├── OBS_GUIDE.md                      # Paper-aligned OBS backend setup guide
 ├── Dockerfile                        # Optional container for the EvidenT driver
 ├── client.py                         # MCP repair-loop client
 ├── server.py                         # MCP tool server
@@ -34,6 +44,8 @@ The original paper workflow used the openSUSE Open Build Service (OBS). This art
 │   ├── history_soluction.csv         # Historical repair cases
 │   └── risc_v_knowledge_base.csv     # RISC-V knowledge context
 ├── scripts/
+│   ├── obs_bulk_upload.py            # Create/upload OBS packages in bulk
+│   ├── reproduce_reduced.sh           # One-command credential-free reproduction
 │   ├── smoke_test.py                 # Fast artifact sanity check
 │   └── validate_package.py           # Validate one package with Docker or OBS
 ├── tools/
@@ -55,12 +67,41 @@ a preheated Docker image tarball for the RISC-V validator.
 
 Reviewers can complete the basic setup and smoke test in under 30 minutes.
 
+### Start Here: Credential-Free Smoke Test
+
+The current Zenodo artifact incorporates the kick-the-tires feedback received
+on the initial Docker validation case. For the shortest reviewer path, use the
+submitted preheated image and the reduced `python-stomper` package:
+
+```bash
+docker load -i images/evident-opensuse-riscv64.tar.gz
+uv sync
+uv run python scripts/smoke_test.py
+uv run python scripts/smoke_test.py --validate
+```
+
+Neither an LLM API key nor OBS credentials are required for these commands.
+The final command intentionally validates an unrepaired package and succeeds
+when the RISC-V build reaches the package's expected `%check` failure. Its
+expected final lines are:
+
+```text
+validator_reached_expected_check_failure=ok
+smoke_test=ok
+```
+
+The same sequence is available as one command:
+
+```bash
+bash scripts/reproduce_reduced.sh
+```
+
 ### Requirements
 
 - Python 3.11+
 - `uv`
 - Docker with Linux containers
-- For RISC-V Docker validation on a non-RISC-V host: qemu/binfmt support for `linux/riscv64`
+- For RISC-V Docker validation on a non-RISC-V host: qemu/binfmt support for `linux/riscv64`; QEMU 9.2 or newer is recommended for the submitted openSUSE RISC-V image
 - An OpenAI-compatible API endpoint for full LLM repair-loop runs
 
 See `REQUIREMENTS.md`, `STATUS.md`, and `LICENSE` for the files expected by the ISSTA artifact packaging checklist.
@@ -107,6 +148,7 @@ Fill `.env` for full repair-loop runs:
 ```bash
 OPENAI_API_KEY="..."
 OPENAI_API_BASE_URL="..."
+LLM_MODEL="..."
 ```
 
 The source-archive setup path may download dependencies and rebuild Docker images. The
@@ -181,8 +223,45 @@ For RISC-V Docker builds on an x86 host, enable binfmt first:
 
 ```bash
 docker run --rm --privileged tonistiigi/binfmt --install riscv64
-docker run --rm --platform linux/riscv64 registry.opensuse.org/opensuse/tumbleweed:latest uname -m
+docker run --rm --platform linux/riscv64 evident-opensuse-riscv64:latest uname -m
 ```
+
+The first command installs a recent static qemu-riscv64 emulator for the
+current boot. Re-run it after host reboot if binfmt registrations are reset.
+
+#### QEMU 9.2 Requirement For RISC-V Docker Validation
+
+The submitted `linux/riscv64` validator image runs openSUSE userspace through
+qemu-user binfmt emulation on x86 hosts. Recent openSUSE tools can use the
+`openat2` syscall, which qemu-riscv64 supports only in QEMU 9.2 and newer. Older
+host QEMU versions, including common distribution packages such as Ubuntu 24.04
+QEMU 8.2 and Debian 12 QEMU 7.2, may fail during archive extraction with:
+
+```text
+tar: ...: Cannot open: Function not implemented
+```
+
+Check the loaded validator image with:
+
+```bash
+docker run --rm \
+  --platform linux/riscv64 \
+  -v "$PWD/dataset/obs_data/risc_v_reduced/failed_python-stomper:/workspace:rw" \
+  -w /workspace \
+  evident-opensuse-riscv64:latest \
+  bash -lc 'set -e; uname -m; rm -rf /tmp/tar-test; mkdir -p /tmp/tar-test; cd /tmp/tar-test; tar -xzf /workspace/stomper-0.4.3.tar.gz; echo tar_ok'
+```
+
+If this fails, install or re-register a recent emulator:
+
+```bash
+docker pull tonistiigi/binfmt:latest
+docker run --privileged --rm tonistiigi/binfmt --install riscv64
+```
+
+Then re-run the check. If a registry mirror serves a stale `tonistiigi/binfmt`
+image, pull an explicit recent tag or install `qemu-user` / `qemu-user-static`
+9.2 or newer from the host distribution or backports and re-register binfmt.
 
 ### Validator Image Check
 
@@ -208,6 +287,22 @@ This artifact supports two scopes:
   validation case.
 - Full scope: run the MCP repair loop over selected packages with LLM
   credentials.
+
+Docker and OBS both execute openSUSE package builds, but they serve different
+artifact-evaluation roles. Docker is self-contained and can run without OBS
+credentials, so it is suitable for smoke tests, one-package validation, and
+small repair experiments. It is much slower on x86 hosts because RISC-V builds
+run through qemu emulation. OBS is the paper-aligned backend for larger or
+authoritative validation because it provides the openSUSE project configuration,
+repository dependency resolution, scheduler, build workers, and RISC-V build
+root.
+
+| Scope | Entry point | External credentials | Expected evidence |
+|:------|:------------|:---------------------|:------------------|
+| Basic smoke test | `uv run python scripts/smoke_test.py` | None | Usually under 5 minutes; ends with `smoke_test=ok` |
+| Reduced RISC-V validation | `uv run python scripts/smoke_test.py --validate` | None; Docker and binfmt/QEMU are required | Several minutes depending on emulation; ends with `validator_reached_expected_check_failure=ok` and `smoke_test=ok` |
+| Full repair loop | `uv run python client.py` | OpenAI-compatible endpoint; OBS credentials only for the OBS backend | Long-running and service dependent; emits repair logs and summaries |
+| Paper-scale 219-package evaluation | `client.py` over the separate dataset | OpenAI-compatible endpoint and the paper-aligned OBS setup | Long-running; audit with the manifest, per-package logs, and summaries |
 
 ### Paper Claims Supported By This Artifact
 
@@ -335,6 +430,48 @@ obs:
 
 The MCP tool interface is unchanged. In OBS mode, `upload_file_to_obs_tool` uploads sources and `check_build_result` polls OBS. In Docker mode, upload is skipped and `check_build_result` builds the local package directory directly.
 
+For full-dataset OBS validation, first create empty OBS package placeholders
+without uploading the known-failing inputs.
+
+The reviewer-owned project must already define a `standard/riscv64` build
+target as described in `OBS_GUIDE.md`; `obs_bulk_upload.py` creates packages
+and uploads sources but does not create or modify project build targets.
+
+After confirming that target, create the placeholders:
+
+```bash
+export OBS_USERNAME="your_obs_user_name"
+export OBS_PASSWORD="your_obs_password_or_token"
+export OBS_PROJECT="home:your_obs_user:EvidenT-AE"
+
+uv run python scripts/obs_bulk_upload.py \
+  --root /path/to/EvidenT-riscv-219-dataset/packages \
+  --manifest /path/to/EvidenT-riscv-219-dataset/package_manifest.txt \
+  --project "$OBS_PROJECT" \
+  --create-only \
+  --jobs 8
+```
+
+Then run EvidenT on selected packages. After each repair, EvidenT uploads the
+complete repaired package directory from `temp_workspace/<package>/` to the
+matching OBS package and polls the OBS build result. If a local dataset
+directory uses the `failed_` prefix, EvidenT strips that prefix for OBS source
+package names; for example, local `failed_python-stomper` is uploaded to OBS as
+`python-stomper`.
+
+```bash
+export EVIDENT_DATA_ROOT=/path/to/EvidenT-riscv-219-dataset/packages
+export EVIDENT_PACKAGES=<package_name>
+export OPENAI_API_KEY="your_openai_compatible_key"
+export OPENAI_API_BASE_URL="your_openai_compatible_base_url"
+export LLM_MODEL="your_model_name"
+
+uv run python client.py
+```
+
+See `OBS_GUIDE.md` for the complete project creation and troubleshooting
+sequence.
+
 ## Optional Driver Container
 
 Build the EvidenT driver image:
@@ -366,6 +503,12 @@ The full 219-package dataset is distributed separately as `EvidenT-riscv-219-dat
 In total, 219 packages were evaluated. Among them:
 118 packages were successfully repaired (success) by EvidenT, the overall success rate is 53.88%.
 
+The table reports the submitted GPT-5-mini evaluation results. The included
+package directories and `obs_log_*.txt` files are the original failing inputs
+and baseline OBS logs; their failure status should not be confused with the
+final repair outcome. In particular, `postquantumcryptoengine` was successfully
+repaired, consistently with the repair log and the paper's case study.
+
 The detail of repair results is as follows:
 
 | package                               | repair result |
@@ -374,7 +517,7 @@ The detail of repair results is as follows:
 | python-ly                             | success |
 | keylightctl                           | failed |
 | trng                                  | success |
-| postquantumcryptoengine               | failed |
+| postquantumcryptoengine               | success |
 | rpmconf                               | failed |
 | password-store                        | success |
 | vdt                                   | success |
@@ -392,7 +535,7 @@ The detail of repair results is as follows:
 | LaTeXML                               | failed |
 | python-BitVector                      | success |
 | ansible-cmdb                          | success |
-| python-flake8-comprehensions          | success |
+| python-flake8-comprehensions          | failed |
 | velero-plugin-for-csi                 | failed |
 | nlopt                                 | failed |
 | monitoring-plugins-http_json          | success |

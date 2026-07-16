@@ -213,6 +213,8 @@ def run_docker_build(package_dir: str, package_name: str, config: Dict[str, Any]
         "--rm",
         "--pull",
         str(pull_policy),
+        "--security-opt",
+        "seccomp=unconfined",
         "-v",
         f"{package_path}:{workdir}:rw",
         "-w",

@@ -19,8 +19,42 @@ For RISC-V validation on an x86_64 or arm64 host, Docker must support qemu/binfm
 
 ```bash
 docker run --rm --privileged tonistiigi/binfmt --install riscv64
-docker run --rm --platform linux/riscv64 registry.opensuse.org/opensuse/tumbleweed:latest uname -m
+docker run --rm --platform linux/riscv64 evident-opensuse-riscv64:latest uname -m
 ```
+
+QEMU 9.2 or newer is recommended for the submitted openSUSE RISC-V validator
+image. Recent openSUSE userspace can use the `openat2` syscall, which older host
+qemu-riscv64 versions do not implement. Ubuntu 24.04 commonly ships QEMU 8.2
+and Debian 12 commonly ships QEMU 7.2; these versions may fail during archive
+extraction with:
+
+```text
+tar: ...: Cannot open: Function not implemented
+```
+
+Check the loaded validator image with:
+
+```bash
+docker run --rm \
+  --platform linux/riscv64 \
+  -v "$PWD/dataset/obs_data/risc_v_reduced/failed_python-stomper:/workspace:rw" \
+  -w /workspace \
+  evident-opensuse-riscv64:latest \
+  bash -lc 'set -e; uname -m; rm -rf /tmp/tar-test; mkdir -p /tmp/tar-test; cd /tmp/tar-test; tar -xzf /workspace/stomper-0.4.3.tar.gz; echo tar_ok'
+```
+
+If the check fails, install or re-register a recent static qemu-riscv64
+emulator:
+
+```bash
+docker pull tonistiigi/binfmt:latest
+docker run --privileged --rm tonistiigi/binfmt --install riscv64
+```
+
+Re-run the binfmt command after host reboot if registrations are reset. If a
+registry mirror serves a stale `tonistiigi/binfmt` image, pull an explicit
+recent tag or install `qemu-user` / `qemu-user-static` 9.2 or newer from the host
+distribution or backports and re-register binfmt.
 
 For long or repeated runs, use the preheated validator image built by:
 

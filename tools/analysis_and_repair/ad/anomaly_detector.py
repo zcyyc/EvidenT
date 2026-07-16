@@ -1,9 +1,34 @@
 import os
 import json
+import threading
+from concurrent.futures import ThreadPoolExecutor
+
 from openai import OpenAI
 from tqdm import tqdm
 from dotenv import load_dotenv
+
 load_dotenv(".env")
+
+# Reuse a single OpenAI client across calls instead of creating one per request.
+_client_lock = threading.Lock()
+_client = None
+
+
+def _get_client() -> OpenAI:
+    global _client
+    with _client_lock:
+        if _client is None:
+            _client = OpenAI(
+                api_key=os.getenv("DASHSCOPE_API_KEY")
+                or os.getenv("API_KEY")
+                or os.getenv("OPENAI_API_KEY"),
+                base_url=os.getenv("DASHSCOPE_API_BASE_URL")
+                or os.getenv("API_BASE")
+                or os.getenv("OPENAI_API_BASE_URL")
+                or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+            )
+        return _client
+
 
 def build_lad_prompt(log_lines: list[str], templates: list[str]) -> str:
     """Build prompt for anomaly detection, emphasizing careful line-by-line error analysis with keyword cues."""
@@ -45,13 +70,12 @@ def detect_anomaly_with_llm(log_lines: list[str], templates: list[str]) -> bool:
     prompt = build_lad_prompt(log_lines, templates)
 
     try:
-        client = OpenAI(
-            api_key=os.getenv("DASHSCOPE_API_KEY"),
-            base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        )
+        client = _get_client()
         response = (
             client.chat.completions.create(
-                model="qwen-plus-latest",
+                model=os.getenv("ANOMALY_LLM_MODEL")
+                or os.getenv("LLM_MODEL")
+                or "qwen-plus-latest",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt},
@@ -97,24 +121,42 @@ def process_file(filename: str, input_path, output_path):
     with open(input_path, "r") as f:
         structured_blocks = json.load(f)
 
-    updated_blocks = []
-
-    for block in tqdm(structured_blocks, desc=f"Processing {filename}", leave=False):
+    def _detect(block):
         parsed_entries = block.get("parsed_entries", [])
-
-        # extract log content and templates
         log_lines = [entry["log_content"] for entry in parsed_entries]
         templates = [entry.get("log_event_template", "") for entry in parsed_entries]
+        return detect_anomaly_with_llm(log_lines, templates)
 
-        # detect anomalies using LLM
-        is_anomalous = detect_anomaly_with_llm(log_lines, templates)
+    # Run per-block LLM anomaly checks concurrently; results keep block order.
+    # Kept interruptible: on Ctrl+C / errors, queued tasks are cancelled instead
+    # of draining the whole queue before shutdown.
+    max_workers = max(1, int(os.getenv("EVIDENT_LAD_CONCURRENCY", "4")))
+    pool = ThreadPoolExecutor(max_workers=max_workers)
+    try:
+        flags = list(
+            tqdm(
+                pool.map(_detect, structured_blocks),
+                total=len(structured_blocks),
+                desc=f"Processing {filename}",
+                leave=False,
+            )
+        )
+    except BaseException:
+        pool.shutdown(wait=False, cancel_futures=True)
+        raise
+    pool.shutdown(wait=True)
 
+    updated_blocks = []
+    for block, is_anomalous in zip(structured_blocks, flags):
         if is_anomalous:
-            # construct the output structure
-            updated_block = {
-                "anomalous_parts": ["\n"+entry["log_content"]+"\n" for entry in parsed_entries],
-            }
-            updated_blocks.append(updated_block)
+            parsed_entries = block.get("parsed_entries", [])
+            updated_blocks.append(
+                {
+                    "anomalous_parts": [
+                        "\n" + entry["log_content"] + "\n" for entry in parsed_entries
+                    ],
+                }
+            )
 
     # save the results
     with open(output_path, "w") as f:

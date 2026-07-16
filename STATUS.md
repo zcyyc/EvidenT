@@ -4,6 +4,7 @@
 
 - Functional
 - Reusable
+- Available
 
 ## Badge Rationale
 
@@ -23,4 +24,9 @@ For full MCP client/server execution, run `uv run python client.py` with LLM cre
 
 ## Available Badge
 
-The repository is ready to be archived for an Available badge after uploading the final artifact bundle to a DOI-backed archival service such as Zenodo, Figshare, or Dryad. Add the DOI to the paper and README once archival is complete.
+The artifact bundle and separate 219-package dataset are published through the
+[DOI-backed Zenodo record](https://doi.org/10.5281/zenodo.20972389). The current
+Zenodo version matches the reviewer-facing artifact documented in `README.md`
+and `ARTIFACT.md` and incorporates the kick-the-tires feedback on the initial
+Docker validation case. The
+[concept DOI](https://doi.org/10.5281/zenodo.20970807) covers all versions.

@@ -3,8 +3,38 @@ import requests
 from requests.auth import HTTPBasicAuth
 from xml.etree import ElementTree
 import time
+from urllib.parse import quote
 from config_utils import load_config
 from tools.validation.docker_build import run_docker_build
+
+
+def obs_path_part(value: str) -> str:
+    return quote(value, safe="")
+
+
+def obs_package_name(package_name: str) -> str:
+    return package_name.removeprefix("failed_")
+
+
+OBS_PENDING_STATES = {
+    "blocked",
+    "building",
+    "dispatching",
+    "scheduled",
+    "signing",
+}
+
+
+def obs_status_kind(code: str | None) -> str:
+    """Classify OBS states without treating queued builds as failures."""
+    normalized = (code or "").lower()
+    if normalized == "succeeded":
+        return "success"
+    if normalized in {"failed", "broken", "unresolvable"}:
+        return "failure"
+    if normalized in {"disabled", "excluded", "locked"}:
+        return "inactive"
+    return "pending"
 
 
 def download_logs_and_sources(temp_dir, base_url, user_name, password):
@@ -32,18 +62,27 @@ def download_logs_and_sources(temp_dir, base_url, user_name, password):
 
 
 def check_obs_main(temp_dir: str, package_name: str, config: dict):
-    obs_url = config["obs"]["url"]
-    user_name = config["obs"]["user_name"]
-    password = config["obs"]["password"]
-    project = config["obs"]["project"]
-    repository_name = config["obs"].get("repository", "standard")
-    architecture_name = config["obs"].get("architecture", "riscv64")
+    obs_url = os.getenv("OBS_URL") or config["obs"]["url"]
+    user_name = os.getenv("OBS_USERNAME") or config["obs"]["user_name"]
+    password = os.getenv("OBS_PASSWORD") or config["obs"]["password"]
+    project = os.getenv("OBS_PROJECT") or config["obs"]["project"]
+    repository_name = (
+        os.getenv("OBS_REPOSITORY") or config["obs"].get("repository", "standard")
+    )
+    architecture_name = (
+        os.getenv("OBS_ARCHITECTURE") or config["obs"].get("architecture", "riscv64")
+    )
 
     max_wait_seconds = 600
     check_interval = 30
     elapsed_seconds = 0
+    source_package = obs_package_name(package_name)
 
-    base_url = f"{obs_url}/build/{project}/{repository_name}/{architecture_name}/{package_name}/"
+    base_url = (
+        f"{obs_url}/build/{obs_path_part(project)}/"
+        f"{obs_path_part(repository_name)}/{obs_path_part(architecture_name)}/"
+        f"{obs_path_part(source_package)}/"
+    )
     status_url = base_url + "_status"
 
     while elapsed_seconds < max_wait_seconds:
@@ -77,23 +116,36 @@ def check_obs_main(temp_dir: str, package_name: str, config: dict):
 
             code_value = root.attrib.get("code")
 
-            if code_value != "building":
-                if code_value == "broken":
-                    return f"Build broken! The sources either contain no build description (e.g. specfile), automatic source processing failed or a merge conflict does exist. Repository has been published. \n broken: can not parse name from {package_name}.spec"
-                elif code_value == "unresolvable":
-                    return "Build unresolvable! The build can not begin, because required packages are either missing or not explicitly defined."
-                elif code_value == "succeeded":
-                    return "Build succeeded! The build has been successfully completed."
-                else:
-                    log_path = download_logs_and_sources(
-                        temp_dir, base_url, user_name, password
-                    )
-                    if log_path is None:
-                        return "Build failed! The failed log has been updated."
-                    return (
-                        f"Build failed! The failed log has been updated to: {log_path}"
-                    )
+            status_kind = obs_status_kind(code_value)
+            if status_kind == "success":
+                return "Build succeeded! The build has been successfully completed."
 
+            if status_kind == "failure":
+                if code_value == "broken":
+                    details = root.findtext("details") or response.text[:1000]
+                    return (
+                        "Build broken! OBS could not process the source package. "
+                        f"Package: {source_package}. Details: {details}"
+                    )
+                if code_value == "unresolvable":
+                    return "Build unresolvable! The build can not begin, because required packages are either missing or not explicitly defined."
+                log_path = download_logs_and_sources(
+                    temp_dir, base_url, user_name, password
+                )
+                if log_path is None:
+                    return "Build failed! The failed log could not be saved locally."
+                return f"Build failed! The failed log has been updated to: {log_path}"
+
+            if status_kind == "inactive":
+                details = root.findtext("details") or "no details provided"
+                return (
+                    f"Build inactive! OBS status is {code_value}. "
+                    f"Package: {source_package}. Details: {details}"
+                )
+
+            # OBS commonly reports scheduled/blocked/dispatching before a
+            # RISC-V worker starts. Unknown transient states are also polled
+            # until the bounded timeout rather than being mislabeled failed.
             time.sleep(check_interval)
             elapsed_seconds += check_interval
 

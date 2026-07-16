@@ -42,9 +42,10 @@ class AutoRepairClient:
         self.session: Optional[ClientSession] = None
         self.is_session_active = False
 
+        self.model = os.getenv("LLM_MODEL", "gpt-5-mini")
         self.client = OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_API_BASE_URL"),
+            api_key=os.getenv("OPENAI_API_KEY") or os.getenv("API_KEY"),
+            base_url=os.getenv("OPENAI_API_BASE_URL") or os.getenv("API_BASE"),
         )
 
         config = load_config()
@@ -75,7 +76,9 @@ class AutoRepairClient:
         self._log("global", f"Connecting to server... (attempt {attempt})")
         try:
             params = StdioServerParameters(
-                command="uv", args=["run", self.server_script]
+                command="uv",
+                args=["run", self.server_script],
+                env=os.environ.copy(),
             )
             stdio_transport = await self.exit_stack.enter_async_context(
                 stdio_client(params)
@@ -266,7 +269,7 @@ class AutoRepairClient:
         # The model call
         try:
             resp = self.client.chat.completions.create(
-                model="gpt-5-mini", messages=messages, tools=tools
+                model=self.model, messages=messages, tools=tools
             )
         except Exception as e:
             self._log(package_name, f"Model call failed: {e}")
@@ -290,6 +293,31 @@ class AutoRepairClient:
 
                 if tool_name in ["log_anomaly_detection_tool", "dependency_constrain_tool"]:
                     tool_args["input_dir"] = package_path
+
+                # Enforce upload-before-check for the OBS backend: checking
+                # without a prior upload would validate the stale remote
+                # state on OBS instead of the local changes.
+                if (
+                    tool_name == "check_build_result"
+                    and self.validator_backend == "obs"
+                    and not did_upload
+                ):
+                    try:
+                        up_res = await self.session.call_tool(
+                            "upload_file_to_obs_tool",
+                            {"package_path": package_path},
+                        )
+                        up_txt = _txt(up_res.content)
+                        did_upload = True
+                        self._log(
+                            package_name,
+                            f"[auto] upload before check => {up_txt[:300]}",
+                        )
+                    except Exception as e:
+                        self._log(
+                            package_name,
+                            f"[auto] upload before check failed: {e}",
+                        )
 
                 args_key = make_args_key(tool_name, tool_args)
                 # Avoid repeated calls
@@ -390,7 +418,7 @@ class AutoRepairClient:
             # Continue to the next round of models
             try:
                 resp = self.client.chat.completions.create(
-                    model="gpt-5-mini", messages=messages, tools=tools
+                    model=self.model, messages=messages, tools=tools
                 )
                 choice = resp.choices[0]
                 latest_text = choice.message.content or latest_text

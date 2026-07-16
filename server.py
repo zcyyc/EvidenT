@@ -5,6 +5,14 @@ import difflib
 import time
 import tarfile
 import zipfile
+import builtins
+import functools
+import sys
+
+# MCP stdio uses stdout for JSON-RPC frames. Tool diagnostics must not print to
+# stdout, or the client will try to parse them as protocol messages.
+builtins.print = functools.partial(builtins.print, file=sys.stderr, flush=True)
+
 from mcp.server.fastmcp import FastMCP
 import pandas as pd
 from tools.analysis_and_repair.anomaly_detection import RunAnomalyDetection
@@ -163,9 +171,14 @@ def parse_build_result_tool(result_content: str, package_name: str) -> str:
     try:
         status = result_content.split(": ", 1)[-1]
         low = status.lower()
-        success = any(
-            k in low for k in ["success", "succeeded", "successfully", "passed", "ok"]
-        )
+        # Failure keywords take precedence: e.g. "broken" contains the
+        # substring "ok" and must never be treated as success.
+        failure_keywords = ["broken", "failed", "failure", "unresolvable", "error"]
+        success_keywords = ["succeeded", "successfully", "success", "passed"]
+        if any(k in low for k in failure_keywords):
+            success = False
+        else:
+            success = any(k in low for k in success_keywords)
         return json.dumps({"success": success, "status": status})
     except Exception:
         return json.dumps({"success": False, "status": "Unknown (parse error)"})
