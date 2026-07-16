@@ -9,7 +9,6 @@ The original paper workflow used the openSUSE Open Build Service (OBS). This art
 The evaluated artifact and complete 219-package dataset are archived on Zenodo:
 
 - **Evaluated version:** [10.5281/zenodo.20972389](https://doi.org/10.5281/zenodo.20972389)
-- **All versions:** [10.5281/zenodo.20970807](https://doi.org/10.5281/zenodo.20970807)
 
 <p align="center">
   <img src="assets/framework.png" width="850" alt="EvidenT framework">

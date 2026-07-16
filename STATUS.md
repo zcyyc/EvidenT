@@ -28,5 +28,4 @@ The artifact bundle and separate 219-package dataset are published through the
 [DOI-backed Zenodo record](https://doi.org/10.5281/zenodo.20972389). The current
 Zenodo version matches the reviewer-facing artifact documented in `README.md`
 and `ARTIFACT.md` and incorporates the kick-the-tires feedback on the initial
-Docker validation case. The
-[concept DOI](https://doi.org/10.5281/zenodo.20970807) covers all versions.
+Docker validation case.

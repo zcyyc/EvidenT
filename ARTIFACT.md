@@ -11,8 +11,7 @@ EvidenT is intended to support the **Functional** and **Reusable** artifact expe
 
 The artifact and separate 219-package dataset are distributed through the
 [DOI-backed Zenodo record](https://doi.org/10.5281/zenodo.20972389), supporting
-the **Available** expectation. The
-[concept DOI](https://doi.org/10.5281/zenodo.20970807) covers all versions.
+the **Available** expectation.
 The current archived version incorporates the kick-the-tires feedback on the
 initial Docker validation case.
 
